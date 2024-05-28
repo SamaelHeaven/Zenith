@@ -10,6 +10,7 @@ version "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 def javafxVersion = "17.0.1"
@@ -20,6 +21,10 @@ tasks.withType(JavaCompile).configureEach {
 
 kotlin {
     jvmToolchain(17)
+}
+
+java {
+    withSourcesJar()
 }
 
 javafx {

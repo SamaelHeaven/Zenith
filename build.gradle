@@ -29,10 +29,10 @@ dependencies {
     implementation "org.openjfx:javafx-fxml"
 
     for (os in ["win", "linux", "mac"]) {
-        compileOnly "org.openjfx:javafx-base:$javafxVersion:$os"
-        compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"
-        compileOnly "org.openjfx:javafx-controls:$javafxVersion:$os"
-        compileOnly "org.openjfx:javafx-fxml:$javafxVersion:$os"
+        implementation "org.openjfx:javafx-base:$javafxVersion:$os"
+        implementation "org.openjfx:javafx-graphics:$javafxVersion:$os"
+        implementation "org.openjfx:javafx-controls:$javafxVersion:$os"
+        implementation "org.openjfx:javafx-fxml:$javafxVersion:$os"
     }
 }
 

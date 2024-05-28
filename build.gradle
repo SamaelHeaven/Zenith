@@ -2,7 +2,6 @@ plugins {
     id "java-library"
     id "maven-publish"
     id "org.jetbrains.kotlin.jvm" version "1.9.22"
-    id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 group "org.samaelheaven"
@@ -23,12 +22,12 @@ kotlin {
     jvmToolchain(17)
 }
 
-javafx {
-    version = javafxVersion
-    modules = ["javafx.controls", "javafx.fxml"]
-}
-
 dependencies {
+    implementation "org.openjfx:javafx-base"
+    implementation "org.openjfx:javafx-graphics"
+    implementation "org.openjfx:javafx-controls"
+    implementation "org.openjfx:javafx-fxml"
+
     for (os in ["win", "linux", "mac"]) {
         compileOnly "org.openjfx:javafx-base:$javafxVersion:$os"
         compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"

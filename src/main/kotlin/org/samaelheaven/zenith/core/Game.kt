@@ -10,6 +10,8 @@ import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
+import org.samaelheaven.zenith.asset.Texture
+import org.samaelheaven.zenith.utils.url
 import java.io.PrintStream
 
 class Game private constructor() {
@@ -118,7 +120,7 @@ class Game private constructor() {
         fxStage.isFullScreen = config.fullscreen
         fxStage.isResizable = config.resizable
         config.icon?.let {
-            fxStage.icons.add(it.fxImage)
+            fxStage.icons.add(Texture(it).fxImage)
         }
         fxStage.scene = fxScene
         fxStage.show()

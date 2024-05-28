@@ -1,6 +1,6 @@
 package org.samaelheaven.zenith.core
 
-import org.samaelheaven.zenith.asset.Texture
+import java.net.URL
 
 data class GameConfig(
     val width: UInt = 800u,
@@ -10,5 +10,5 @@ data class GameConfig(
     val fullscreen: Boolean = false,
     val decorated: Boolean = true,
     val resizable: Boolean = true,
-    val icon: Texture? = null
+    val icon: URL? = null
 )

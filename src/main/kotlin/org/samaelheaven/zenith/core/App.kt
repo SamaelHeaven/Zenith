@@ -6,6 +6,12 @@ import javafx.scene.Scene
 import javafx.stage.Stage
 
 class App : Application() {
+    companion object {
+        fun launch() {
+            launch(App::class.java)
+        }
+    }
+
     override fun start(stage: Stage) {
         println("It works!!!!!")
         val root = Group()

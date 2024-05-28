@@ -1,0 +1,51 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "org.jetbrains.kotlin.jvm" version "1.8.22"
+    id "org.openjfx.javafxplugin" version "0.1.0"
+}
+
+group "org.samaelheaven"
+version "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+def javafxVersion = "21"
+def lwjglVersion = "3.3.3"
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+javafx {
+    version = javafxVersion
+    modules = ["javafx.controls", "javafx.fxml"]
+}
+
+dependencies {
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-stb"
+
+    for (os in ["win", "linux", "mac"]) {
+        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
+        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
+        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

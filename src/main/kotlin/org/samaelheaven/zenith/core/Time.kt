@@ -34,8 +34,8 @@ object Time {
 
     private fun refresh() {
         frameCount++
-        _delta = ((ticks - lastFrameTime) / 1e9).toFloat()
-        val timeInSeconds = (ticks / 1e9).toFloat()
+        _delta = ((ticks - lastFrameTime) / 1e9f)
+        val timeInSeconds = (ticks / 1e9f)
         _averageFPS = if (timeInSeconds == 0f) 0f else (frameCount / timeInSeconds)
         lastFrameTime = ticks
     }

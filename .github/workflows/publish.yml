@@ -1,9 +1,9 @@
-name: Publish Kotlin Library
+name: Publish
 
 on:
   push:
     branches:
-      - master
+      - main
   release:
     types: [created]
 
@@ -19,6 +19,11 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
       - name: Build and publish
         run: ./gradlew publish

@@ -30,10 +30,10 @@ javafx {
 
 dependencies {
     for (os in ["win", "linux", "mac"]) {
-        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-controls:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-fxml:$javafxVersion:$os"
+        compileOnly "org.openjfx:javafx-base:$javafxVersion:$os"
+        compileOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"
+        compileOnly "org.openjfx:javafx-controls:$javafxVersion:$os"
+        compileOnly "org.openjfx:javafx-fxml:$javafxVersion:$os"
     }
 }
 

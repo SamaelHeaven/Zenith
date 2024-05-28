@@ -1,7 +1,7 @@
 plugins {
     id "java-library"
     id "maven-publish"
-    id "org.jetbrains.kotlin.jvm" version "1.5.31"
+    id "org.jetbrains.kotlin.jvm" version "1.9.22"
     id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
@@ -19,9 +19,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion = "17"
-    }
+    jvmToolchain(17)
 }
 
 javafx {
@@ -32,8 +30,8 @@ javafx {
 dependencies {
     for (os in ["win", "linux", "mac"]) {
         runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-graphics:$javafxVersion:$os" // Fixed typo in module name
-        runtimeOnly "org.openjfx:javafx-controls:$javafxVersion:$os" // Added missing module
+        runtimeOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"
+        runtimeOnly "org.openjfx:javafx-controls:$javafxVersion:$os"
     }
 }
 

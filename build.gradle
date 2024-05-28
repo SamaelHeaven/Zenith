@@ -1,8 +1,8 @@
 plugins {
     id "java-library"
     id "maven-publish"
-    id "org.jetbrains.kotlin.jvm" version "1.8.22"
-    id "org.openjfx.javafxplugin" version "0.1.0"
+    id "org.jetbrains.kotlin.jvm" version "1.5.31"
+    id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 group "org.samaelheaven"
@@ -12,23 +12,17 @@ repositories {
     mavenCentral()
 }
 
-def javafxVersion = "17.0.11"
-def lwjglVersion = "3.3.3"
+def javafxVersion = "17.0.1"
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
 }
 
 kotlin {
-    jvmToolchain(17)
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+    jvmToolchain {
+        languageVersion = "17"
     }
 }
-
 
 javafx {
     version = javafxVersion
@@ -36,16 +30,10 @@ javafx {
 }
 
 dependencies {
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-stb"
-
     for (os in ["win", "linux", "mac"]) {
         runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
-        runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
+        runtimeOnly "org.openjfx:javafx-graphics:$javafxVersion:$os" // Fixed typo in module name
+        runtimeOnly "org.openjfx:javafx-controls:$javafxVersion:$os" // Added missing module
     }
 }
 

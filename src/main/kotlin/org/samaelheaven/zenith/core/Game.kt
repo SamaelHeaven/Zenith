@@ -123,6 +123,7 @@ class Game private constructor() {
             fxStage.icons.add(Texture(it).fxImage)
         }
         fxStage.scene = fxScene
+        fxStage.centerOnScreen()
         fxStage.show()
     }
 

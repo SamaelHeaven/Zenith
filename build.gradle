@@ -23,6 +23,13 @@ kotlin {
     jvmToolchain(17)
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+
 javafx {
     version = javafxVersion
     modules = ["javafx.controls", "javafx.fxml"]

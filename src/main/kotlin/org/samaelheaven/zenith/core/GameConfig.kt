@@ -9,6 +9,6 @@ data class GameConfig(
     val title: String = "Game",
     val fullscreen: Boolean = false,
     val decorated: Boolean = true,
-    val resizable: Boolean = false,
+    val resizable: Boolean = true,
     val icon: Texture? = null
 )

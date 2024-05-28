@@ -10,26 +10,31 @@ class Time private constructor() {
     companion object {
         private const val SLEEP_PRECISION = 2_000_000
         private var instance: Time? = null
-            get() = (if (field == null) Time() else field).also { field = it }
+        private val time: Time
+            get() = (if (instance == null) Time() else instance).also { instance = it }!!
 
         val ticks: Long
             get() = System.nanoTime() - instance!!.startTime
 
         val delta: Float
-            get() = instance!!.delta
+            get() = time.delta
 
         val fixedDelta: Float
             get() = 1 / 60f
 
         val averageFPS: Float
-            get() = instance!!.averageFPS
+            get() = time.averageFPS
 
         val currentFPS: Float
             get() = if (delta == 0f) 0f else 1 / delta
 
         internal fun update() {
-            instance!!.update()
+            time.update()
         }
+    }
+
+    init {
+        Game.throwIfUninitialized()
     }
 
     private fun update() {
@@ -54,7 +59,7 @@ class Time private constructor() {
     }
 
     private val targetFrameTime: Double
-        get() = 1_000_000_000.0 / 120
+        get() = 1_000_000_000.0 / Game.fpsTarget.toDouble()
 
     private fun sleep(nanoSeconds: Long) {
         val endTime = System.nanoTime() + nanoSeconds

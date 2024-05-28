@@ -1,15 +1,44 @@
 package org.samaelheaven.zenith.asset
 
+import javafx.beans.NamedArg
 import javafx.scene.image.Image
 import org.samaelheaven.zenith.core.Game
+import org.samaelheaven.zenith.utils.Resource
 import java.net.URL
 
-class Texture(url: URL) {
-    internal val fxImage: Image = Image(url.toExternalForm())
-    val width: Float = fxImage.width.toFloat()
-    val height: Float = fxImage.height.toFloat()
+class Texture {
+    internal val fxImage: Image
+    val width: Float get() = fxImage.width.toFloat()
+    val height: Float get() = fxImage.height.toFloat()
+
+
+    constructor(@NamedArg("url") url: URL, @NamedArg("cache") cache: Boolean = cacheByDefault) {
+        val path = url.toExternalForm()
+        if (cachedFxImages.containsKey(path)) {
+            fxImage = cachedFxImages[path]!!
+            return
+        }
+        fxImage = Image(path)
+        if (cache) {
+            cachedFxImages[path] = fxImage
+        }
+    }
+
+    constructor(@NamedArg("path") path: String, @NamedArg("cache") cache: Boolean = cacheByDefault) : this(
+        Resource.url(path), cache
+    )
 
     init {
         Game.throwIfUninitialized()
+    }
+
+    companion object {
+        private val cachedFxImages = HashMap<String, Image>()
+        var cacheByDefault: Boolean = true
+
+        @JvmStatic
+        fun valueOf(path: String): Texture {
+            return Texture(path)
+        }
     }
 }

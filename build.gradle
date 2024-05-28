@@ -23,10 +23,6 @@ kotlin {
     jvmToolchain(17)
 }
 
-java {
-    withSourcesJar()
-}
-
 javafx {
     version = javafxVersion
     modules = ["javafx.controls", "javafx.fxml"]

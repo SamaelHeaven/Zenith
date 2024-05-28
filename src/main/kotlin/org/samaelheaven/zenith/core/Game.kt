@@ -11,97 +11,92 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import org.samaelheaven.zenith.asset.Texture
-import org.samaelheaven.zenith.utils.url
 import java.io.PrintStream
 
-class Game private constructor() {
+object Game {
     private lateinit var config: GameConfig
-    private lateinit var scene: Scene
+    private lateinit var _scene: Scene
     private lateinit var gameLoop: GameLoop
     private lateinit var fxStage: Stage
     private lateinit var fxScene: javafx.scene.Scene
     private lateinit var fxRoot: StackPane
     private lateinit var fxCanvas: Canvas
-    private var fpsTarget: UInt = 0u
+    private var _fpsTarget: UInt = 0u
     private var cleanup: Boolean = false
+    private var initialized: Boolean = false
+    private val err = System.err
 
-    companion object {
-        private var instance: Game? = null
-        private val err = System.err
-        private val game: Game
-            get() = (if (instance == null) Game() else instance).also { instance = it }!!
-
-        var scene: Scene
-            get() {
-                throwIfUninitialized()
-                return game.scene
-            }
-            set(value) {
-                throwIfUninitialized()
-                val game = this.game
-                game.scene = value
-                game.scene.start()
-                game.cleanup = true
-            }
-
-        val width: UInt
-            get() {
-                throwIfUninitialized()
-                return game.config.width
-            }
-
-        val height: UInt
-            get() {
-                throwIfUninitialized()
-                return game.config.height
-            }
-
-        var fullscreen: Boolean
-            get() {
-                throwIfUninitialized()
-                return game.fxStage.isFullScreen
-            }
-            set(value) {
-                throwIfUninitialized()
-                game.fxStage.isFullScreen = value
-            }
-
-        var fpsTarget: UInt
-            get() {
-                throwIfUninitialized()
-                return game.fpsTarget
-            }
-            set(value) {
-                throwIfUninitialized()
-                game.fpsTarget = value
-            }
-
-        fun launch(scene: Scene, config: GameConfig = GameConfig()) {
-            if (instance != null) {
-                throw IllegalStateException("Game has already been initialized.")
-            }
-            val game = this.game
-            game.config = config
-            game.fpsTarget = config.fpsTarget
-            game.scene = scene
-            System.setErr(PrintStream(PrintStream.nullOutputStream()))
-            Platform.startup {
-                game.initialize()
-                System.setErr(err)
-                game.run()
-            }
-        }
-
-        fun exit() {
+    var scene: Scene
+        get() {
             throwIfUninitialized()
-            game.gameLoop.stop()
-            Platform.runLater { Platform.exit() }
+            return _scene
+        }
+        set(value) {
+            throwIfUninitialized()
+            _scene = value
+            _scene.start()
+            cleanup = true
         }
 
-        internal fun throwIfUninitialized() {
-            if (instance == null) {
-                throw IllegalStateException("Game has not been initialized yet.")
-            }
+    val width: UInt
+        get() {
+            throwIfUninitialized()
+            return config.width
+        }
+
+    val height: UInt
+        get() {
+            throwIfUninitialized()
+            return config.height
+        }
+
+    var fullscreen: Boolean
+        get() {
+            throwIfUninitialized()
+            return fxStage.isFullScreen
+        }
+        set(value) {
+            throwIfUninitialized()
+            fxStage.isFullScreen = value
+        }
+
+    var fpsTarget: UInt
+        get() {
+            throwIfUninitialized()
+            return _fpsTarget
+        }
+        set(value) {
+            throwIfUninitialized()
+            _fpsTarget = value
+        }
+
+    fun launch(scene: Scene, config: GameConfig = GameConfig()) {
+        if (initialized) {
+            throw IllegalStateException("Game has already been initialized.")
+        }
+        initialized = true
+        this.config = config
+        _fpsTarget = config.fpsTarget
+        _scene = scene
+        System.setErr(PrintStream(PrintStream.nullOutputStream()))
+        Platform.startup {
+            initialize()
+            System.setErr(err)
+            run()
+        }
+    }
+
+    fun exit() {
+        throwIfUninitialized()
+        Platform.runLater {
+            gameLoop.stop()
+            Platform.exit()
+        }
+    }
+
+    internal fun throwIfUninitialized() {
+        if (!initialized) {
+            throw IllegalStateException("Game has not been initialized yet.")
         }
     }
 
@@ -161,7 +156,7 @@ class Game private constructor() {
                 System.gc()
                 cleanup = false
             }
-            scene.update()
+            _scene.update()
         }
         gameLoop.start()
     }

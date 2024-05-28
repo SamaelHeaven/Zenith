@@ -1,52 +1,42 @@
 package org.samaelheaven.zenith.core
 
-class Time private constructor() {
+object Time {
+    private const val SLEEP_PRECISION = 2_000_000
     private val startTime = System.nanoTime()
     private var lastFrameTime: Long = 0
     private var frameCount: Long = 0
-    private var delta = 0f
-    private var averageFPS = 0f
-
-    companion object {
-        private const val SLEEP_PRECISION = 2_000_000
-        private var instance: Time? = null
-        private val time: Time
-            get() = (if (instance == null) Time() else instance).also { instance = it }!!
-
-        val ticks: Long
-            get() = System.nanoTime() - instance!!.startTime
-
-        val delta: Float
-            get() = time.delta
-
-        val fixedDelta: Float
-            get() = 1 / 60f
-
-        val averageFPS: Float
-            get() = time.averageFPS
-
-        val currentFPS: Float
-            get() = if (delta == 0f) 0f else 1 / delta
-
-        internal fun update() {
-            time.update()
-        }
-    }
+    private var _delta = 0f
+    private var _averageFPS = 0f
 
     init {
         Game.throwIfUninitialized()
     }
 
-    private fun update() {
+    val ticks: Long
+        get() = System.nanoTime() - startTime
+
+    val delta: Float
+        get() = _delta
+
+    val fixedDelta: Float
+        get() = 1 / 60f
+
+    val averageFPS: Float
+        get() = _averageFPS
+
+    val currentFPS: Float
+        get() = if (delta == 0f) 0f else 1 / delta
+
+    internal fun update() {
         sync()
         refresh()
     }
 
     private fun refresh() {
         frameCount++
-        delta = ((ticks - lastFrameTime) / 1e9).toFloat()
+        _delta = ((ticks - lastFrameTime) / 1e9).toFloat()
         val timeInSeconds = (ticks / 1e9).toFloat()
-        averageFPS = if (timeInSeconds == 0f) 0f else (frameCount / timeInSeconds)
+        _averageFPS = if (timeInSeconds == 0f) 0f else (frameCount / timeInSeconds)
         lastFrameTime = ticks
     }
 

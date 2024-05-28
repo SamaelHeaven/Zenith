@@ -5,7 +5,7 @@ on:
     branches:
       - master
   release:
-    types: [ created ]
+    types: [created]
 
 jobs:
   publish:
@@ -21,9 +21,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Grant execute permission to gradlew
+        run: chmod +x ./gradlew
+
       - name: Build and publish
-        run: |
-          ./gradlew publish
+        run: ./gradlew publish
         env:
-          USERNAME_GITHUB: ${{ secrets.username }}
-          TOKEN_GITHUB: ${{ secrets.token }}
+          USERNAME_GITHUB: ${{ secrets.USERNAME_GITHUB }}
+          TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}

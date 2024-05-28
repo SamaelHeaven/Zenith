@@ -1,9 +1,11 @@
-name: Build and Publish
+name: Publish Kotlin Library
 
 on:
   push:
     branches:
-      - master
+      - main
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -13,16 +15,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Publish to GitHub Packages
-        run: ./gradlew publishToGitHubPackages
+      - name: Build and publish
+        run: ./gradlew publish --distribution=plain
         env:
           USERNAME_GITHUB: ${{ secrets.USERNAME_GITHUB }}
           TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}

@@ -42,11 +42,9 @@ dependencies {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom {
-                url.set("https://github.com/samaelheaven/zenith.git")
-            }
+        gpr(MavenPublication) {
+            artifactId="zenith"
+            from(components.java)
         }
     }
     repositories {

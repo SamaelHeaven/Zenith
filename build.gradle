@@ -33,6 +33,7 @@ dependencies {
         runtimeOnly "org.openjfx:javafx-base:$javafxVersion:$os"
         runtimeOnly "org.openjfx:javafx-graphics:$javafxVersion:$os"
         runtimeOnly "org.openjfx:javafx-controls:$javafxVersion:$os"
+        runtimeOnly "org.openjfx:javafx-fxml:$javafxVersion:$os"
     }
 }
 

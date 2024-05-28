@@ -9,8 +9,8 @@ abstract class Scene {
 
     internal fun start() {
         if (!initialized) {
-            initialize()
             initialized = true
+            initialize()
         }
     }
 }

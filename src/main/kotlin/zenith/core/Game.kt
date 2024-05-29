@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.core
+package zenith.core
 
 import javafx.application.Platform
 import javafx.geometry.Insets
@@ -10,8 +10,8 @@ import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
-import org.samaelheaven.zenith.asset.Texture
-import org.samaelheaven.zenith.math.Vector2
+import zenith.asset.Texture
+import zenith.math.Vector2
 import java.io.PrintStream
 
 object Game {

@@ -1,10 +1,10 @@
-package org.samaelheaven.zenith.asset
+package zenith.asset
 
 import javafx.beans.NamedArg
 import javafx.scene.image.Image
-import org.samaelheaven.zenith.core.Game
-import org.samaelheaven.zenith.math.Vector2
-import org.samaelheaven.zenith.utils.Resource
+import zenith.core.Game
+import zenith.math.Vector2
+import zenith.utils.Resource
 import java.net.URL
 
 class Texture {

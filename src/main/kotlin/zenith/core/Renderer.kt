@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.core
+package zenith.core
 
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext

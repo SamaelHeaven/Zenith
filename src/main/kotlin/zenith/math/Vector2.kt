@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.math
+package zenith.math
 
 import javafx.beans.NamedArg
 import java.util.*

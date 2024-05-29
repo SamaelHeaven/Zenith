@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.utils
+package zenith.utils
 
 object Path {
     fun format(path: String): String {

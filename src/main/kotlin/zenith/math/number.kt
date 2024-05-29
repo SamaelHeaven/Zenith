@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.math
+package zenith.math
 
 operator fun Number.plus(v: Vector2): Vector2 = v + this
 

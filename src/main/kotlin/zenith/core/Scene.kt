@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.core
+package zenith.core
 
 abstract class Scene {
     private var initialized: Boolean = false

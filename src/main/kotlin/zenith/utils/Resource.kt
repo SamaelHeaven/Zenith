@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.utils
+package zenith.utils
 
 import java.io.InputStream
 import java.net.URL

@@ -1,4 +1,4 @@
-package org.samaelheaven.zenith.core
+package zenith.core
 
 object Time {
     private const val SLEEP_PRECISION = 2_000_000

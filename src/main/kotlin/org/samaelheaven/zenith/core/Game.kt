@@ -11,6 +11,7 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import org.samaelheaven.zenith.asset.Texture
+import org.samaelheaven.zenith.math.Vector2
 import java.io.PrintStream
 
 object Game {
@@ -21,7 +22,8 @@ object Game {
     private lateinit var fxScene: javafx.scene.Scene
     private lateinit var fxRoot: StackPane
     private lateinit var fxCanvas: Canvas
-    private var _fpsTarget: UInt = 0u
+    private var _icon: Texture? = null
+    private var _fpsTarget: Int = 0
     private var cleanup: Boolean = false
     private var initialized: Boolean = false
     private val err = System.err
@@ -38,16 +40,40 @@ object Game {
             cleanup = true
         }
 
-    val width: UInt
+    val width: Int
         get() {
             throwIfUninitialized()
             return config.width
         }
 
-    val height: UInt
+    val height: Int
         get() {
             throwIfUninitialized()
             return config.height
+        }
+
+    val size: Vector2
+        get() {
+            throwIfUninitialized()
+            return Vector2(width, height)
+        }
+
+    val icon: Texture?
+        get() {
+            throwIfUninitialized()
+            return _icon
+        }
+
+    val title: String
+        get() {
+            throwIfUninitialized()
+            return config.title
+        }
+
+    val decorated: Boolean
+        get() {
+            throwIfUninitialized()
+            return config.decorated
         }
 
     var fullscreen: Boolean
@@ -60,7 +86,7 @@ object Game {
             fxStage.isFullScreen = value
         }
 
-    var fpsTarget: UInt
+    var fpsTarget: Int
         get() {
             throwIfUninitialized()
             return _fpsTarget
@@ -115,7 +141,8 @@ object Game {
         fxStage.isFullScreen = config.fullscreen
         fxStage.isResizable = config.resizable
         config.icon?.let {
-            fxStage.icons.add(Texture(it).fxImage)
+            _icon = Texture(it)
+            fxStage.icons.add(_icon!!.fxImage)
         }
         fxStage.scene = fxScene
         fxStage.centerOnScreen()

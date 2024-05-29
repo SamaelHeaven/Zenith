@@ -3,9 +3,9 @@ package org.samaelheaven.zenith.core
 import java.net.URL
 
 data class GameConfig(
-    val width: UInt = 800u,
-    val height: UInt = 600u,
-    val fpsTarget: UInt = 60u,
+    val width: Int = 800,
+    val height: Int = 600,
+    val fpsTarget: Int = 60,
     val title: String = "Game",
     val fullscreen: Boolean = false,
     val decorated: Boolean = true,

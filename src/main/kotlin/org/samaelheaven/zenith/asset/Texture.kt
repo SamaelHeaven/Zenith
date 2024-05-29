@@ -13,6 +13,16 @@ class Texture {
     val height: Float get() = fxImage.height.toFloat()
     val size: Vector2 get() = Vector2(width, height)
 
+    companion object {
+        private val cachedFxImages = HashMap<String, Image>()
+        var cacheByDefault: Boolean = true
+
+        @JvmStatic
+        fun valueOf(value: String): Texture {
+            return Texture(value)
+        }
+    }
+
     constructor(@NamedArg("url") url: URL, @NamedArg("cache") cache: Boolean = cacheByDefault) {
         val path = url.toExternalForm()
         if (cachedFxImages.containsKey(path)) {
@@ -31,15 +41,5 @@ class Texture {
 
     init {
         Game.throwIfUninitialized()
-    }
-
-    companion object {
-        private val cachedFxImages = HashMap<String, Image>()
-        var cacheByDefault: Boolean = true
-
-        @JvmStatic
-        fun valueOf(value: String): Texture {
-            return Texture(value)
-        }
     }
 }

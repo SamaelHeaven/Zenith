@@ -12,7 +12,7 @@ class Vector2 {
     val y: Float
 
     companion object {
-        val ZERO = Vector2(0)
+        val ZERO = Vector2()
         val UP = Vector2(0, -1)
         val DOWN = Vector2(0, 1)
         val LEFT = Vector2(-1, 0)
@@ -21,7 +21,8 @@ class Vector2 {
         @JvmStatic
         fun valueOf(value: String): Vector2 {
             val scanner = Scanner(value)
-            return Vector2(scanner.nextDouble(), scanner.nextDouble())
+            val float = scanner.nextFloat()
+            return Vector2(float, if (scanner.hasNextFloat()) scanner.nextFloat() else float)
         }
     }
 
@@ -31,6 +32,8 @@ class Vector2 {
     }
 
     constructor(@NamedArg("xy") xy: Number) : this(xy, xy)
+
+    constructor() : this(0)
 
     operator fun plus(v: Vector2) = Vector2(x + v.x, y + v.y)
 
@@ -49,6 +52,10 @@ class Vector2 {
     operator fun div(f: Number) = Vector2(x / f.toFloat(), y / f.toFloat())
 
     operator fun unaryMinus() = Vector2(-x, -y)
+
+    operator fun component1(): Float = x
+
+    operator fun component2(): Float = y
 
     fun isInside(min: Vector2, max: Vector2): Boolean {
         return x >= min.x && x <= max.x && y >= min.y && y <= max.y
@@ -126,6 +133,10 @@ class Vector2 {
     fun normalize(): Vector2 {
         val length = length()
         return if (length != 0f) Vector2(x / length, y / length) else ZERO
+    }
+
+    override fun toString(): String {
+        return "{ \"x\": $x, \"y\": $y}"
     }
 
     override fun equals(other: Any?): Boolean {

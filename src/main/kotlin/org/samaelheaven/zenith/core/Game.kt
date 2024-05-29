@@ -115,7 +115,6 @@ object Game {
     fun exit() {
         throwIfUninitialized()
         Platform.runLater {
-            gameLoop.stop()
             Platform.exit()
         }
     }
@@ -177,6 +176,7 @@ object Game {
     }
 
     private fun run() {
+        _scene.start()
         gameLoop = GameLoop {
             Time.update()
             if (cleanup) {

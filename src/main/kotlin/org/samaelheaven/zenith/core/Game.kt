@@ -82,11 +82,12 @@ object Game {
             fxStage = stage
         }
         System.setErr(PrintStream(PrintStream.nullOutputStream()))
-        Platform.startup {
+        val start = {
             initialize()
             System.setErr(err)
             run()
         }
+        if (stage == null) Platform.startup(start) else start()
     }
 
     fun exit() {

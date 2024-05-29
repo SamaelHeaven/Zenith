@@ -50,14 +50,6 @@ class Vector2 {
 
     operator fun unaryMinus() = Vector2(-x, -y)
 
-    fun translateX(x: Number): Vector2 {
-        return Vector2(this.x + x.toFloat(), y)
-    }
-
-    fun translateY(y: Number): Vector2 {
-        return Vector2(x, this.y + y.toFloat())
-    }
-
     fun isInside(min: Vector2, max: Vector2): Boolean {
         return x >= min.x && x <= max.x && y >= min.y && y <= max.y
     }
@@ -134,24 +126,6 @@ class Vector2 {
     fun normalize(): Vector2 {
         val length = length()
         return if (length != 0f) Vector2(x / length, y / length) else ZERO
-    }
-
-    fun getModifiers(): Vector2 {
-        return Vector2(getModifierX(), getModifierY())
-    }
-
-    fun getModifierX(): Int {
-        if (x == 0f) {
-            return 0
-        }
-        return if (x > 0f) 1 else -1
-    }
-
-    fun getModifierY(): Int {
-        if (y == 0f) {
-            return 0
-        }
-        return if (y > 0f) 1 else -1
     }
 
     override fun equals(other: Any?): Boolean {

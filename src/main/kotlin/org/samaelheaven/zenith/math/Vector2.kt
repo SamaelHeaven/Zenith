@@ -21,8 +21,9 @@ class Vector2 {
         @JvmStatic
         fun valueOf(value: String): Vector2 {
             val scanner = Scanner(value)
-            val float = scanner.nextFloat()
-            return Vector2(float, if (scanner.hasNextFloat()) scanner.nextFloat() else float)
+            val x = if (scanner.hasNextFloat()) scanner.nextFloat() else 0
+            val y = if (scanner.hasNextFloat()) scanner.nextFloat() else x
+            return Vector2(x, y)
         }
     }
 

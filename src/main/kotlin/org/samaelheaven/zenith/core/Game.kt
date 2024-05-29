@@ -70,7 +70,7 @@ object Game {
             _fpsTarget = value
         }
 
-    fun launch(scene: Scene, config: GameConfig = GameConfig(), stage: Stage? = null) {
+    fun launch(scene: Scene, config: GameConfig = GameConfig()) {
         if (initialized) {
             throw IllegalStateException("Game has already been initialized.")
         }
@@ -78,16 +78,12 @@ object Game {
         this.config = config
         _fpsTarget = config.fpsTarget
         _scene = scene
-        if (stage != null) {
-            fxStage = stage
-        }
         System.setErr(PrintStream(PrintStream.nullOutputStream()))
-        val start = {
+        Platform.startup {
             initialize()
             System.setErr(err)
             run()
         }
-        if (stage == null) Platform.startup(start) else start()
     }
 
     fun exit() {
@@ -113,9 +109,7 @@ object Game {
     }
 
     private fun initializeStage() {
-        if (fxStage == null) {
-            fxStage = Stage()
-        }
+        fxStage = Stage()
         fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
         fxStage.title = config.title
         fxStage.isFullScreen = config.fullscreen

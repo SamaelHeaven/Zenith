@@ -2,7 +2,7 @@ package zenith.input
 
 import javafx.scene.input.KeyEvent
 import zenith.core.Game
-import java.util.Collections
+import java.util.*
 
 object Keyboard {
     private var newTypedString = ""
@@ -57,7 +57,13 @@ object Keyboard {
     }
 
     internal fun onKeyTyped(event: KeyEvent) {
-        newTypedString += event.character
+        if (event.character.isEmpty()) {
+            return
+        }
+        val typedChar = event.character.first()
+        if (isCharTypedValid(typedChar)) {
+            newTypedString += typedString
+        }
     }
 
     internal fun onKeyPressed(event: KeyEvent) {
@@ -108,5 +114,9 @@ object Keyboard {
         newReleasedKeys.clear()
         _releasedKeys.clear()
         updateUpKeys()
+    }
+
+    private fun isCharTypedValid(charTyped: Char): Boolean {
+        return (charTyped in ' '..'~')
     }
 }

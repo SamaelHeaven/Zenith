@@ -57,7 +57,7 @@ object Keyboard {
     }
 
     internal fun onKeyTyped(event: KeyEvent) {
-        newTypedString += event.text
+        newTypedString += event.character
     }
 
     internal fun onKeyPressed(event: KeyEvent) {

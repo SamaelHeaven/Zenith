@@ -1,6 +1,7 @@
 package zenith.core
 
 import javafx.application.Platform
+import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.canvas.Canvas
 import javafx.scene.layout.Background
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import zenith.asset.Texture
+import zenith.input.Keyboard
 import zenith.math.Vector2
 import java.io.PrintStream
 
@@ -24,6 +26,7 @@ object Game {
     private lateinit var fxCanvas: Canvas
     private var _icon: Texture? = null
     private var _fpsTarget: Int = 0
+    private var _focused: Boolean = true
     private var cleanup: Boolean = false
     private var initialized: Boolean = false
     private val err = System.err
@@ -74,6 +77,12 @@ object Game {
         get() {
             throwIfUninitialized()
             return config.decorated
+        }
+
+    val focused: Boolean
+        get() {
+            throwIfUninitialized()
+            return _focused
         }
 
     var fullscreen: Boolean
@@ -135,22 +144,8 @@ object Game {
         initializeCanvas()
         initializeScene()
         initializeRenderer()
+        initializeKeyboard()
         initializeStage()
-    }
-
-    private fun initializeStage() {
-        fxStage = Stage()
-        fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
-        fxStage.title = config.title
-        fxStage.isFullScreen = config.fullscreen
-        fxStage.isResizable = config.resizable
-        config.icon?.let {
-            _icon = Texture(it)
-            fxStage.icons.add(_icon!!.fxImage)
-        }
-        fxStage.scene = fxScene
-        fxStage.centerOnScreen()
-        fxStage.show()
     }
 
     private fun initializeRoot() {
@@ -180,10 +175,35 @@ object Game {
         Renderer.initialize(fxCanvas)
     }
 
+    private fun initializeKeyboard() {
+        fxScene.onKeyTyped = EventHandler { Keyboard.onKeyTyped(it) }
+        fxScene.onKeyPressed = EventHandler { Keyboard.onKeyPressed(it) }
+        fxScene.onKeyReleased = EventHandler { Keyboard.onKeyReleased(it) }
+    }
+
+    private fun initializeStage() {
+        fxStage = Stage()
+        fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
+        fxStage.title = config.title
+        fxStage.fullScreenExitHint = ""
+        fxStage.fullScreenExitKeyCombination = null
+        fxStage.isFullScreen = config.fullscreen
+        fxStage.isResizable = config.resizable
+        config.icon?.let {
+            _icon = Texture(it)
+            fxStage.icons.add(_icon!!.fxImage)
+        }
+        fxStage.focusedProperty().addListener { _, _, value -> _focused = value }
+        fxStage.scene = fxScene
+        fxStage.centerOnScreen()
+        fxStage.show()
+    }
+
     private fun run() {
         _scene.start()
         gameLoop = GameLoop {
             Time.update()
+            Keyboard.update()
             if (cleanup) {
                 System.gc()
                 cleanup = false

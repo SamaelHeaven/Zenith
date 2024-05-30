@@ -1,7 +1,7 @@
 package zenith.core
 
 abstract class Scene {
-    private var initialized: Boolean = false
+    private var initialized = false
 
     abstract fun initialize()
 

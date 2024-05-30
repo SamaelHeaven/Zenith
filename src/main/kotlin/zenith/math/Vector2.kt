@@ -54,9 +54,9 @@ class Vector2 {
 
     operator fun unaryMinus() = Vector2(-x, -y)
 
-    operator fun component1(): Float = x
+    operator fun component1() = x
 
-    operator fun component2(): Float = y
+    operator fun component2() = y
 
     fun isInside(min: Vector2, max: Vector2): Boolean {
         return x >= min.x && x <= max.x && y >= min.y && y <= max.y

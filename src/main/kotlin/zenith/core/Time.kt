@@ -3,8 +3,8 @@ package zenith.core
 object Time {
     private const val SLEEP_PRECISION = 2_000_000
     private val startTime = System.nanoTime()
-    private var lastFrameTime: Long = 0
-    private var frameCount: Long = 0
+    private var lastFrameTime = 0L
+    private var frameCount = 0L
     private var _delta = 0f
     private var _averageFPS = 0f
 
@@ -12,20 +12,15 @@ object Time {
         Game.throwIfUninitialized()
     }
 
-    val ticks: Long
-        get() = System.nanoTime() - startTime
+    val ticks get() = System.nanoTime() - startTime
 
-    val delta: Float
-        get() = _delta
+    val delta get() = _delta
 
-    val fixedDelta: Float
-        get() = 1 / 60f
+    val fixedDelta get() = 1 / 60f
 
-    val averageFPS: Float
-        get() = _averageFPS
+    val averageFPS get() = _averageFPS
 
-    val currentFPS: Float
-        get() = if (delta == 0f) 0f else 1 / delta
+    val currentFPS get() = if (delta == 0f) 0f else 1 / delta
 
     internal fun update() {
         sync()

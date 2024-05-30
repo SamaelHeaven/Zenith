@@ -14,9 +14,9 @@ import javax.imageio.ImageIO
 
 class Texture {
     internal val fxImage: Image
-    val width: Float get() = fxImage.width.toFloat()
-    val height: Float get() = fxImage.height.toFloat()
-    val size: Vector2 get() = Vector2(width, height)
+    val width get() = fxImage.width.toFloat()
+    val height get() = fxImage.height.toFloat()
+    val size get() = Vector2(width, height)
 
     companion object {
         private val cachedFxImages = HashMap<String, Image>()

@@ -4,10 +4,10 @@ import javafx.beans.NamedArg
 import java.util.*
 
 class Color private constructor(override val fxPaint: javafx.scene.paint.Paint) : Paint() {
-    val r: Int get() = (255 * (fxPaint as javafx.scene.paint.Color).red).toInt()
-    val g: Int get() = (255 * (fxPaint as javafx.scene.paint.Color).green).toInt()
-    val b: Int get() = (255 * (fxPaint as javafx.scene.paint.Color).blue).toInt()
-    val a: Int get() = (255 * (fxPaint as javafx.scene.paint.Color).opacity).toInt()
+    val r get() = (255 * (fxPaint as javafx.scene.paint.Color).red).toInt()
+    val g get() = (255 * (fxPaint as javafx.scene.paint.Color).green).toInt()
+    val b get() = (255 * (fxPaint as javafx.scene.paint.Color).blue).toInt()
+    val a get() = (255 * (fxPaint as javafx.scene.paint.Color).opacity).toInt()
 
     constructor(@NamedArg("web") web: String) : this(javafx.scene.paint.Color.web(web))
 

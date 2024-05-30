@@ -2,8 +2,8 @@ package zenith.paint
 
 class NamedColor(val color: Color, name: String) {
     companion object {
-        private val colors: MutableMap<String, Color> = HashMap()
-        fun get(name: String): Color? = colors[name]
+        private val colors = HashMap<String, Color>()
+        fun get(name: String) = colors[name]
     }
 
     init {

@@ -11,7 +11,8 @@ object Keyboard {
     private var _typedString = ""
     private val _downKeys = HashSet<Key>()
     private val _upKeys = HashSet<Key>()
-    private val releasedKeys = HashSet<Key>()
+    private var _pressedKeys = HashSet<Key>()
+    private val _releasedKeys = HashSet<Key>()
 
     val typedString get() = _typedString
 
@@ -19,7 +20,9 @@ object Keyboard {
 
     val upKeys: Set<Key> get() = Collections.unmodifiableSet(_upKeys)
 
-    val pressedKeys: Set<Key> get() = Collections.unmodifiableSet(releasedKeys)
+    val pressedKeys: Set<Key> get() = Collections.unmodifiableSet(_pressedKeys)
+
+    val releasedKeys: Set<Key> get() = Collections.unmodifiableSet(_releasedKeys)
 
     init {
         Game.throwIfUninitialized()
@@ -34,7 +37,11 @@ object Keyboard {
     }
 
     fun isKeyPressed(key: Key): Boolean {
-        return releasedKeys.contains(key)
+        return _pressedKeys.contains(key)
+    }
+
+    fun isKeyReleased(key: Key): Boolean {
+        return _releasedKeys.contains(key)
     }
 
     internal fun update() {
@@ -43,6 +50,7 @@ object Keyboard {
             return
         }
         updateTypedString()
+        updatePressedKeys()
         updateDownKeys()
         updateReleasedKeys()
         updateUpKeys()
@@ -79,11 +87,17 @@ object Keyboard {
         }
     }
 
+    private fun updatePressedKeys() {
+        _pressedKeys.clear()
+        _pressedKeys.addAll(newPressedKeys)
+        _pressedKeys.removeAll(_downKeys)
+    }
+
     private fun updateReleasedKeys() {
-        releasedKeys.clear()
-        releasedKeys.addAll(newReleasedKeys)
+        _releasedKeys.clear()
+        _releasedKeys.addAll(newReleasedKeys)
         newReleasedKeys.clear()
-        _downKeys.removeAll(releasedKeys)
+        _downKeys.removeAll(_releasedKeys)
     }
 
     private fun reset() {
@@ -92,7 +106,7 @@ object Keyboard {
         newPressedKeys.clear()
         _downKeys.clear()
         newReleasedKeys.clear()
-        releasedKeys.clear()
+        _releasedKeys.clear()
         updateUpKeys()
     }
 }

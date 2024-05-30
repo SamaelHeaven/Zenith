@@ -7,6 +7,7 @@ import zenith.core.Game
 import zenith.io.Resource
 import zenith.math.Vector2
 import java.io.File
+import java.io.OutputStream
 import java.net.URL
 import java.util.*
 import javax.imageio.ImageIO
@@ -51,9 +52,15 @@ class Texture {
         Game.throwIfUninitialized()
     }
 
-    fun save(path: String, format: Format) {
+    fun save(path: String, format: Format = Format.PNG) {
         val file = File(path)
-        ImageIO.write(SwingFXUtils.fromFXImage(fxImage, null), format.name.lowercase(Locale.ENGLISH), file)
+        file.outputStream().use {
+            save(it, format)
+        }
+    }
+
+    fun save(output: OutputStream, format: Format = Format.PNG) {
+        ImageIO.write(SwingFXUtils.fromFXImage(fxImage, null), format.name.lowercase(Locale.ENGLISH), output)
     }
 
     enum class Format {

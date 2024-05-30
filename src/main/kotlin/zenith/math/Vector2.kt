@@ -137,7 +137,7 @@ class Vector2 {
     }
 
     override fun toString(): String {
-        return "{ \"x\": $x, \"y\": $y}"
+        return "{ \"x\": $x, \"y\": $y }"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,4 +1,4 @@
-package zenith.utils
+package zenith.io
 
 object Path {
     fun format(path: String): String {

@@ -1,4 +1,4 @@
-package zenith.utils
+package zenith.io
 
 import java.io.InputStream
 import java.net.URL

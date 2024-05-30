@@ -4,7 +4,7 @@ import javafx.beans.NamedArg
 import javafx.scene.image.Image
 import zenith.core.Game
 import zenith.math.Vector2
-import zenith.utils.Resource
+import zenith.io.Resource
 import java.net.URL
 
 class Texture {

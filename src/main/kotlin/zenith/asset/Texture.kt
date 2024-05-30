@@ -1,11 +1,15 @@
 package zenith.asset
 
 import javafx.beans.NamedArg
+import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
 import zenith.core.Game
-import zenith.math.Vector2
 import zenith.io.Resource
+import zenith.math.Vector2
+import java.io.File
 import java.net.URL
+import java.util.*
+import javax.imageio.ImageIO
 
 class Texture {
     internal val fxImage: Image
@@ -39,7 +43,20 @@ class Texture {
         Resource.url(path), cache
     )
 
+    internal constructor(fxImage: Image) {
+        this.fxImage = fxImage
+    }
+
     init {
         Game.throwIfUninitialized()
+    }
+
+    fun save(path: String, format: Format) {
+        val file = File(path)
+        ImageIO.write(SwingFXUtils.fromFXImage(fxImage, null), format.name.lowercase(Locale.ENGLISH), file)
+    }
+
+    enum class Format {
+        GIF, PNG, JPG
     }
 }

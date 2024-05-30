@@ -119,6 +119,11 @@ object Game {
         }
     }
 
+    fun screenshot(): Texture {
+        throwIfUninitialized()
+        return Texture(fxCanvas.snapshot(null, null))
+    }
+
     internal fun throwIfUninitialized() {
         if (!initialized) {
             throw IllegalStateException("Game has not been initialized yet.")

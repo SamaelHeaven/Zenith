@@ -16,7 +16,7 @@ class Color private constructor(override val fxPaint: javafx.scene.paint.Paint) 
     ) : this(javafx.scene.paint.Color.rgb(r, g, b, a.toDouble() / 255))
 
     override fun toString(): String {
-        return "{ \"r\": $r, \"g\": $g, \"b\": $b, \"a\": $a }"
+        return "{r: $r, g: $g, b: $b, a: $a}"
     }
 
     override fun equals(other: Any?): Boolean {

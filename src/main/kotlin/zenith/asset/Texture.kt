@@ -41,8 +41,8 @@ class Texture {
         }
     }
 
-    constructor(@NamedArg("path") path: String, @NamedArg("cache") cache: Boolean = cacheByDefault) : this(
-        Resource.url(path), cache
+    constructor(@NamedArg("resource") resource: String, @NamedArg("cache") cache: Boolean = cacheByDefault) : this(
+        Resource.url(resource), cache
     )
 
     internal constructor(fxImage: Image) {

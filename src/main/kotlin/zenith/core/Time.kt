@@ -5,6 +5,7 @@ import kotlin.time.toDuration
 
 object Time {
     private const val SLEEP_PRECISION = 2_000_000
+    private val launchTime = System.nanoTime()
     private var startTime = System.nanoTime()
     private var lastFrameTime = 0L
     private var frameCount = 0L
@@ -17,7 +18,7 @@ object Time {
 
     private val ticks get() = System.nanoTime() - startTime
 
-    val elapsed get() = System.nanoTime().toDuration(DurationUnit.NANOSECONDS)
+    val elapsed get() = (System.nanoTime() - launchTime).toDuration(DurationUnit.NANOSECONDS)
 
     val delta get() = _delta
 

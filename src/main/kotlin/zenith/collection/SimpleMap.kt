@@ -64,11 +64,8 @@ class SimpleMap<K, V> : LinkedHashMap<K, V>(), SimpleCollection<KeyValuePair<Col
 
     private fun toList(): List<KeyValuePair<Collection<K>, Collection<V>>> {
         val result = ArrayList<KeyValuePair<Collection<K>, Collection<V>>>()
-        val entries = entries
         for (entry in entries) {
-            val key = listOf(entry.key)
-            val value = listOf(entry.value)
-            result.add(KeyValuePair(key, value))
+            result.add(KeyValuePair(listOf(entry.key), listOf(entry.value)))
         }
         return result
     }

@@ -20,12 +20,12 @@ import java.io.PrintStream
 object Game {
     private lateinit var config: GameConfig
     private lateinit var _scene: Scene
-    private lateinit var currentScene: Scene
     private lateinit var gameLoop: GameLoop
     private lateinit var fxStage: Stage
     private lateinit var fxScene: javafx.scene.Scene
     private lateinit var fxRoot: StackPane
     private lateinit var fxCanvas: Canvas
+    private var currentScene: Scene? = null
     private var _icon: Texture? = null
     private var _fpsTarget: Int = 0
     private var initialized: Boolean = false
@@ -34,7 +34,7 @@ object Game {
     var scene: Scene
         get() {
             throwIfUninitialized()
-            return currentScene
+            return currentScene ?: _scene
         }
         set(value) {
             throwIfUninitialized()
@@ -197,8 +197,6 @@ object Game {
     }
 
     private fun run() {
-        _scene.start()
-        currentScene = _scene
         var cleanup = false
         gameLoop = GameLoop {
             Time.update()
@@ -209,10 +207,10 @@ object Game {
             }
             if (currentScene != _scene) {
                 currentScene = _scene
-                currentScene.start()
+                currentScene?.start()
                 cleanup = true
             }
-            currentScene.update()
+            currentScene?.update()
         }
         gameLoop.start()
     }

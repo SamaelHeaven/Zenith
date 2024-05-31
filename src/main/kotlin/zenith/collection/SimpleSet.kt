@@ -2,39 +2,36 @@ package zenith.collection
 
 import java.util.*
 
-class SimpleSet<E> : LinkedHashSet<E>(), SimpleCollection<E> {
+class SimpleSet<E> : HashSet<E>(), SimpleCollection<E> {
     override var elements: List<E>
-        get() = this
-        set(value) {
-            clear()
-            addAll(value)
-        }
+        get() = throw UnsupportedOperationException()
+        set(_) = throw UnsupportedOperationException()
 
     override fun get(index: Int): E {
-        return ArrayList(this)[index]
+        throw UnsupportedOperationException()
     }
 
     override fun listIterator(): ListIterator<E> {
-        return ArrayList(this).listIterator()
+        throw UnsupportedOperationException()
     }
 
     override fun listIterator(index: Int): ListIterator<E> {
-        return ArrayList(this).listIterator(index)
+        throw UnsupportedOperationException()
     }
 
     override fun lastIndexOf(element: E): Int {
-        return ArrayList(this).lastIndexOf(element)
+        throw UnsupportedOperationException()
     }
 
     override fun indexOf(element: E): Int {
-        return ArrayList(this).indexOf(element)
+        throw UnsupportedOperationException()
     }
 
     override fun spliterator(): Spliterator<E> {
-        return ArrayList(this).spliterator()
+        throw UnsupportedOperationException()
     }
 
     override fun subList(fromIndex: Int, toIndex: Int): List<E> {
-        return ArrayList(this).subList(fromIndex, toIndex)
+        throw UnsupportedOperationException()
     }
 }

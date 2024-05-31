@@ -1,72 +1,58 @@
 package zenith.collection
 
-class SimpleMap<K, V> : LinkedHashMap<K, V>(), SimpleCollection<KeyValuePair<Collection<K>, Collection<V>>> {
-    override var elements: List<KeyValuePair<Collection<K>, Collection<V>>>
-        get() = this
-        set(value) {
-            clear()
-            for (element in value) {
-                put(element.key.first(), element.value.first())
-            }
-        }
+class SimpleMap<K, V> : HashMap<K, V>(), SimpleCollection<KeyValuePair<K, V>> {
+    override var elements: List<KeyValuePair<K, V>>
+        get() = throw UnsupportedOperationException()
+        set(_) = throw UnsupportedOperationException()
 
     @Suppress("UNCHECKED_CAST")
-    override fun add(element: KeyValuePair<Collection<K>, Collection<V>>): Boolean {
-        val key: Collection<K> = if (element.key is List<*>) {
-            element.key
+    override fun add(element: KeyValuePair<K, V>): Boolean {
+        val key: List<K> = if (element.key is List<*>) {
+            element.key as List<K>
         } else {
-            listOf(element.key as K)
+            listOf(element.key)
         }
-        val value: Collection<V> = if (element.value is List<*>) {
-            element.value
+        val value: List<V> = if (element.value is List<*>) {
+            element.value as List<V>
         } else {
-            listOf(element.value as V)
+            listOf(element.value)
         }
-        val oldValue = get(key.first())
-        return put(key.first(), value.first()) != oldValue
+        return get(key.first()) != put(key.first(), value.first())
     }
 
-    override fun contains(element: KeyValuePair<Collection<K>, Collection<V>>): Boolean {
-        return toList().contains(element)
+    override fun contains(element: KeyValuePair<K, V>): Boolean {
+        throw UnsupportedOperationException()
     }
 
-    override fun containsAll(elements: Collection<KeyValuePair<Collection<K>, Collection<V>>>): Boolean {
-        return toList().containsAll(elements)
+    override fun containsAll(elements: Collection<KeyValuePair<K, V>>): Boolean {
+        throw UnsupportedOperationException()
     }
 
-    override fun get(index: Int): KeyValuePair<Collection<K>, Collection<V>> {
-        return toList()[index]
+    override fun get(index: Int): KeyValuePair<K, V> {
+        throw UnsupportedOperationException()
     }
 
-    override fun iterator(): Iterator<KeyValuePair<Collection<K>, Collection<V>>> {
-        return toList().iterator()
+    override fun iterator(): Iterator<KeyValuePair<K, V>> {
+        throw UnsupportedOperationException()
     }
 
-    override fun listIterator(): ListIterator<KeyValuePair<Collection<K>, Collection<V>>> {
-        return toList().listIterator()
+    override fun listIterator(): ListIterator<KeyValuePair<K, V>> {
+        throw UnsupportedOperationException()
     }
 
-    override fun listIterator(index: Int): ListIterator<KeyValuePair<Collection<K>, Collection<V>>> {
-        return toList().listIterator(index)
+    override fun listIterator(index: Int): ListIterator<KeyValuePair<K, V>> {
+        throw UnsupportedOperationException()
     }
 
-    override fun subList(fromIndex: Int, toIndex: Int): List<KeyValuePair<Collection<K>, Collection<V>>> {
-        return toList().subList(fromIndex, toIndex)
+    override fun subList(fromIndex: Int, toIndex: Int): List<KeyValuePair<K, V>> {
+        throw UnsupportedOperationException()
     }
 
-    override fun lastIndexOf(element: KeyValuePair<Collection<K>, Collection<V>>): Int {
-        return toList().lastIndexOf(element)
+    override fun lastIndexOf(element: KeyValuePair<K, V>): Int {
+        throw UnsupportedOperationException()
     }
 
-    override fun indexOf(element: KeyValuePair<Collection<K>, Collection<V>>): Int {
-        return toList().indexOf(element)
-    }
-
-    private fun toList(): List<KeyValuePair<Collection<K>, Collection<V>>> {
-        val result = ArrayList<KeyValuePair<Collection<K>, Collection<V>>>()
-        for (entry in entries) {
-            result.add(KeyValuePair(listOf(entry.key), listOf(entry.value)))
-        }
-        return result
+    override fun indexOf(element: KeyValuePair<K, V>): Int {
+        throw UnsupportedOperationException()
     }
 }

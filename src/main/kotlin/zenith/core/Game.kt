@@ -210,10 +210,10 @@ object Game {
                 cleanup = false
             }
             if (currentScene != _scene) {
+                currentScene = _scene
                 currentScene.start()
                 cleanup = true
             }
-            currentScene = _scene
             currentScene.update()
         }
         gameLoop.start()

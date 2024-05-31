@@ -7,17 +7,17 @@ class SimpleMap<K, V> : HashMap<K, V>(), SimpleCollection<KeyValuePair<K, V>> {
 
     @Suppress("UNCHECKED_CAST")
     override fun add(element: KeyValuePair<K, V>): Boolean {
-        val key: List<K> = if (element.key is List<*>) {
-            element.key as List<K>
+        val key: K = if (element.key is List<*>) {
+            element.key.first() as K
         } else {
-            listOf(element.key)
+            element.key
         }
-        val value: List<V> = if (element.value is List<*>) {
-            element.value as List<V>
+        val value: V = if (element.value is List<*>) {
+            element.value.first() as V
         } else {
-            listOf(element.value)
+            element.value
         }
-        return get(key.first()) != put(key.first(), value.first())
+        return get(key) != put(key, value)
     }
 
     override fun contains(element: KeyValuePair<K, V>): Boolean {

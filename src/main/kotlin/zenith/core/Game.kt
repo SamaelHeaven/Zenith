@@ -28,7 +28,6 @@ object Game {
     private var _icon: Texture? = null
     private var _fpsTarget: Int = 0
     private var _focused: Boolean = true
-    private var cleanup: Boolean = false
     private var initialized: Boolean = false
     private val err = System.err
 
@@ -40,8 +39,6 @@ object Game {
         set(value) {
             throwIfUninitialized()
             _scene = value
-            _scene.start()
-            cleanup = true
         }
 
     val width: Int
@@ -202,14 +199,16 @@ object Game {
 
     private fun run() {
         _scene.start()
+        var currentScene = _scene
         gameLoop = GameLoop {
             Time.update()
             Keyboard.update()
-            if (cleanup) {
+            if (currentScene != _scene) {
+                currentScene.start()
                 System.gc()
-                cleanup = false
             }
-            _scene.update()
+            currentScene = _scene
+            currentScene.update()
         }
         gameLoop.start()
     }

@@ -4,6 +4,7 @@ import javafx.beans.NamedArg
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.Image
 import zenith.core.Game
+import zenith.io.Path
 import zenith.io.Resource
 import zenith.math.Vector2
 import java.io.File
@@ -20,7 +21,7 @@ class Texture {
 
     companion object {
         private val cachedFxImages = HashMap<String, Image>()
-        var cacheByDefault: Boolean = true
+        var cacheByDefault = true
 
         @JvmStatic
         fun valueOf(value: String): Texture {
@@ -53,7 +54,7 @@ class Texture {
     }
 
     fun save(path: String, format: Format = Format.PNG) {
-        val file = File(path)
+        val file = File(Path.format(path))
         file.outputStream().use {
             save(it, format)
         }

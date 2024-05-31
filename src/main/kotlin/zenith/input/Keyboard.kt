@@ -61,8 +61,10 @@ object Keyboard {
             return
         }
         val typedChar = event.character.first()
+        println(typedChar)
         if (isCharTypedValid(typedChar)) {
             newTypedString += typedString
+            println(newTypedString)
         }
     }
 

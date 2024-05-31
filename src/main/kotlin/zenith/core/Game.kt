@@ -4,6 +4,7 @@ import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.canvas.Canvas
+import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.CornerRadii
@@ -186,7 +187,7 @@ object Game {
         fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
         fxStage.title = config.title
         fxStage.fullScreenExitHint = ""
-        fxStage.fullScreenExitKeyCombination = null
+        fxStage.fullScreenExitKeyCombination = KeyCombination.NO_MATCH
         fxStage.isFullScreen = config.fullscreen
         fxStage.isResizable = config.resizable
         config.icon?.let {

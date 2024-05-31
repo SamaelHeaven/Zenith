@@ -121,6 +121,7 @@ object Game {
     fun exit() {
         throwIfUninitialized()
         gameLoop.stop()
+        fxStage.isFullScreen = false
         fxStage.close()
     }
 

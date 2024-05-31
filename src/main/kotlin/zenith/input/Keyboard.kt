@@ -62,7 +62,7 @@ object Keyboard {
         }
         val typedChar = event.character.first()
         if (isCharTypedValid(typedChar)) {
-            newTypedString += typedString
+            newTypedString += typedChar
         }
     }
 
@@ -107,7 +107,6 @@ object Keyboard {
     }
 
     private fun reset() {
-        println(true)
         newTypedString = ""
         _typedString = ""
         newPressedKeys.clear()

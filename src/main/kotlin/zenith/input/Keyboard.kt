@@ -5,14 +5,14 @@ import zenith.core.Game
 import java.util.*
 
 object Keyboard {
-    private var newTypedString = ""
     private val newPressedKeys = HashSet<Key>()
     private val newReleasedKeys = HashSet<Key>()
-    private var _typedString = ""
+    private var newTypedString = ""
     private val _downKeys = HashSet<Key>()
     private val _upKeys = HashSet<Key>()
-    private var _pressedKeys = HashSet<Key>()
+    private val _pressedKeys = HashSet<Key>()
     private val _releasedKeys = HashSet<Key>()
+    private var _typedString = ""
 
     val typedString get() = _typedString
 
@@ -61,12 +61,8 @@ object Keyboard {
             return
         }
         val typedChar = event.character.first()
-        println(typedChar)
-        println(isCharTypedValid(typedChar))
-        println(typedChar.code)
         if (isCharTypedValid(typedChar)) {
             newTypedString += typedString
-            println(newTypedString)
         }
     }
 
@@ -111,6 +107,7 @@ object Keyboard {
     }
 
     private fun reset() {
+        println(true)
         newTypedString = ""
         _typedString = ""
         newPressedKeys.clear()
@@ -121,6 +118,6 @@ object Keyboard {
     }
 
     private fun isCharTypedValid(charTyped: Char): Boolean {
-        return (charTyped.code in ' '.code..'~'.code)
+        return (charTyped in ' '..'~')
     }
 }

@@ -26,7 +26,7 @@ object Time {
 
     val averageFPS get() = _averageFPS
 
-    val currentFPS get() = if (delta == 0f) 0f else 1 / delta
+    val currentFPS get() = if (delta <= 0f) 0f else 1 / delta
 
     internal fun restart() {
         startTime = System.nanoTime()

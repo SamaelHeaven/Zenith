@@ -28,12 +28,12 @@ object Keyboard {
         Game.throwIfUninitialized()
     }
 
-    fun isKeyUp(key: Key): Boolean {
-        return _upKeys.contains(key)
-    }
-
     fun isKeyDown(key: Key): Boolean {
         return _downKeys.contains(key)
+    }
+
+    fun isKeyUp(key: Key): Boolean {
+        return _upKeys.contains(key)
     }
 
     fun isKeyPressed(key: Key): Boolean {

@@ -62,6 +62,8 @@ object Keyboard {
         }
         val typedChar = event.character.first()
         println(typedChar)
+        println(isCharTypedValid(typedChar))
+        println(typedChar.code)
         if (isCharTypedValid(typedChar)) {
             newTypedString += typedString
             println(newTypedString)
@@ -119,6 +121,6 @@ object Keyboard {
     }
 
     private fun isCharTypedValid(charTyped: Char): Boolean {
-        return (charTyped in ' '..'~')
+        return (charTyped.code in ' '.code..'~'.code)
     }
 }

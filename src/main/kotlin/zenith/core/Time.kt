@@ -16,8 +16,6 @@ object Time {
         Game.throwIfUninitialized()
     }
 
-    private val ticks get() = System.nanoTime() - startTime
-
     val elapsed get() = (System.nanoTime() - launchTime).toDuration(DurationUnit.NANOSECONDS)
 
     val delta get() = _delta
@@ -35,11 +33,15 @@ object Time {
         _delta = 0f
         _averageFPS = 0f
     }
-    
+
     internal fun update() {
         sync()
         refresh()
     }
+
+    private val ticks get() = System.nanoTime() - startTime
+
+    private val targetFrameTime: Double get() = 1_000_000_000.0 / Game.fpsTarget.toDouble()
 
     private fun refresh() {
         frameCount++
@@ -56,9 +58,6 @@ object Time {
             sleep(waitTime)
         }
     }
-
-    private val targetFrameTime: Double
-        get() = 1_000_000_000.0 / Game.fpsTarget.toDouble()
 
     private fun sleep(nanoSeconds: Long) {
         val endTime = System.nanoTime() + nanoSeconds

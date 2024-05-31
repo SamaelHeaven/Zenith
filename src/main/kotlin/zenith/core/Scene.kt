@@ -11,6 +11,7 @@ abstract class Scene {
         if (!initialized) {
             initialized = true
             initialize()
+            Time.restart()
         }
     }
 }

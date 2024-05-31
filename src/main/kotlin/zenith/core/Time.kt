@@ -1,8 +1,11 @@
 package zenith.core
 
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
+
 object Time {
     private const val SLEEP_PRECISION = 2_000_000
-    private val startTime = System.nanoTime()
+    private var startTime = System.nanoTime()
     private var lastFrameTime = 0L
     private var frameCount = 0L
     private var _delta = 0f
@@ -12,7 +15,9 @@ object Time {
         Game.throwIfUninitialized()
     }
 
-    val ticks get() = System.nanoTime() - startTime
+    private val ticks get() = System.nanoTime() - startTime
+
+    val elapsed get() = System.nanoTime().toDuration(DurationUnit.NANOSECONDS)
 
     val delta get() = _delta
 
@@ -22,6 +27,14 @@ object Time {
 
     val currentFPS get() = if (delta == 0f) 0f else 1 / delta
 
+    internal fun restart() {
+        startTime = System.nanoTime()
+        lastFrameTime = 0
+        frameCount = 0
+        _delta = 0f
+        _averageFPS = 0f
+    }
+    
     internal fun update() {
         sync()
         refresh()

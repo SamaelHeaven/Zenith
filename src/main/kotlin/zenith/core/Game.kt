@@ -114,7 +114,6 @@ object Game {
         System.setErr(PrintStream(PrintStream.nullOutputStream()))
         Platform.startup {
             initialize()
-            System.setErr(err)
             run()
         }
     }
@@ -143,6 +142,7 @@ object Game {
         initializeRenderer()
         initializeKeyboard()
         initializeStage()
+        System.setErr(err)
     }
 
     private fun initializeRoot() {

@@ -20,6 +20,7 @@ import java.io.PrintStream
 object Game {
     private lateinit var config: GameConfig
     private lateinit var _scene: Scene
+    private lateinit var currentScene: Scene
     private lateinit var gameLoop: GameLoop
     private lateinit var fxStage: Stage
     private lateinit var fxScene: javafx.scene.Scene
@@ -34,7 +35,7 @@ object Game {
     var scene: Scene
         get() {
             throwIfUninitialized()
-            return _scene
+            return currentScene
         }
         set(value) {
             throwIfUninitialized()
@@ -199,7 +200,7 @@ object Game {
 
     private fun run() {
         _scene.start()
-        var currentScene = _scene
+        currentScene = _scene
         gameLoop = GameLoop {
             Time.update()
             Keyboard.update()

@@ -201,12 +201,17 @@ object Game {
     private fun run() {
         _scene.start()
         currentScene = _scene
+        var cleanup = false
         gameLoop = GameLoop {
             Time.update()
             Keyboard.update()
+            if (cleanup) {
+                System.gc()
+                cleanup = false
+            }
             if (currentScene != _scene) {
                 currentScene.start()
-                System.gc()
+                cleanup = true
             }
             currentScene = _scene
             currentScene.update()

@@ -185,7 +185,6 @@ object Game {
         fxStage.title = config.title
         fxStage.fullScreenExitHint = ""
         fxStage.fullScreenExitKeyCombination = KeyCombination.NO_MATCH
-        fxStage.setOnCloseRequest { exit() }
         fxStage.isFullScreen = config.fullscreen
         fxStage.isResizable = config.resizable
         config.icon?.let {
@@ -193,6 +192,7 @@ object Game {
             fxStage.icons.add(_icon!!.fxImage)
         }
         fxStage.scene = fxScene
+        fxStage.setOnCloseRequest { exit() }
         fxStage.centerOnScreen()
         fxStage.show()
     }

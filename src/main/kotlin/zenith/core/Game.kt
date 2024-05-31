@@ -28,7 +28,6 @@ object Game {
     private lateinit var fxCanvas: Canvas
     private var _icon: Texture? = null
     private var _fpsTarget: Int = 0
-    private var _focused: Boolean = true
     private var initialized: Boolean = false
     private val err = System.err
 
@@ -81,7 +80,7 @@ object Game {
     val focused: Boolean
         get() {
             throwIfUninitialized()
-            return _focused
+            return fxStage.isFocused
         }
 
     var fullscreen: Boolean
@@ -192,7 +191,6 @@ object Game {
             _icon = Texture(it)
             fxStage.icons.add(_icon!!.fxImage)
         }
-        fxStage.focusedProperty().addListener { _, _, value -> _focused = value }
         fxStage.scene = fxScene
         fxStage.centerOnScreen()
         fxStage.show()

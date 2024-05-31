@@ -121,10 +121,8 @@ object Game {
 
     fun exit() {
         throwIfUninitialized()
-        Platform.runLater {
-            fxStage.close()
-            Platform.exit()
-        }
+        gameLoop.stop()
+        fxStage.close()
     }
 
     fun screenshot(): Texture {

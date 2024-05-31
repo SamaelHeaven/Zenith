@@ -185,6 +185,7 @@ object Game {
         fxStage.title = config.title
         fxStage.fullScreenExitHint = ""
         fxStage.fullScreenExitKeyCombination = KeyCombination.NO_MATCH
+        fxStage.setOnCloseRequest { exit() }
         fxStage.isFullScreen = config.fullscreen
         fxStage.isResizable = config.resizable
         config.icon?.let {

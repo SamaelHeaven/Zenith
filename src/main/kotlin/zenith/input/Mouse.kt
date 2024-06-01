@@ -2,7 +2,6 @@ package zenith.input
 
 import javafx.scene.input.MouseEvent
 import javafx.scene.robot.Robot
-import javafx.stage.Window
 import zenith.core.Game
 import zenith.math.Vector2
 
@@ -23,7 +22,7 @@ object Mouse {
                 val stagePosition = Vector2(stage.x, stage.y)
                 val stageSize = Vector2(stage.width, stage.height)
                 val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
-                val position = stagePosition + (stageSize / 2) + scaledValue
+                val position = stagePosition + (stageSize / 2) + scaledValue / 2
                 try {
                     it.mouseMove(position.x.toDouble(), position.y.toDouble())
                     _position = clampedValue

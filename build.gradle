@@ -13,7 +13,7 @@ repositories {
     mavenLocal()
 }
 
-def javafxVersion = "17.0.11"
+def javafxVersion = "21.0.3"
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"

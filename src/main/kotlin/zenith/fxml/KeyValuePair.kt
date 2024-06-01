@@ -1,4 +1,4 @@
-package zenith.collection
+package zenith.fxml
 
 import javafx.beans.NamedArg
 

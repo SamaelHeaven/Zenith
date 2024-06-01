@@ -220,7 +220,7 @@ enum class Key(private val fxKeyCode: KeyCode) {
         }
 
         internal fun get(fxKeyCode: KeyCode): Key {
-            return keys[fxKeyCode]!!
+            return keys[fxKeyCode] ?: UNDEFINED
         }
     }
 }

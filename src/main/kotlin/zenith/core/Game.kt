@@ -15,21 +15,22 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import zenith.asset.Texture
 import zenith.input.Keyboard
+import zenith.input.Mouse
 import zenith.math.Vector2
 import java.io.PrintStream
 
 object Game {
-    private lateinit var config: GameConfig
     private lateinit var _scene: Scene
+    private lateinit var _fxStage: Stage
+    private lateinit var _fxCanvas: Canvas
+    private lateinit var config: GameConfig
     private lateinit var gameLoop: GameLoop
-    private lateinit var fxStage: Stage
     private lateinit var fxScene: javafx.scene.Scene
     private lateinit var fxRoot: StackPane
-    private lateinit var fxCanvas: Canvas
-    private var currentScene: Scene? = null
     private var _icon: Texture? = null
     private var _fpsTarget: Int = 0
     private var initialized: Boolean = false
+    private var currentScene: Scene? = null
     private val err = System.err
 
     var scene: Scene
@@ -81,17 +82,17 @@ object Game {
     val focused: Boolean
         get() {
             throwIfUninitialized()
-            return fxStage.isFocused
+            return _fxStage.isFocused
         }
 
     var fullscreen: Boolean
         get() {
             throwIfUninitialized()
-            return fxStage.isFullScreen
+            return _fxStage.isFullScreen
         }
         set(value) {
             throwIfUninitialized()
-            fxStage.isFullScreen = value
+            _fxStage.isFullScreen = value
         }
 
     var fpsTarget: Int
@@ -122,13 +123,13 @@ object Game {
     fun exit() {
         throwIfUninitialized()
         gameLoop.stop()
-        fxStage.isFullScreen = false
-        fxStage.close()
+        _fxStage.isFullScreen = false
+        _fxStage.close()
     }
 
     fun screenshot(): Texture {
         throwIfUninitialized()
-        return Texture(fxCanvas.snapshot(null, null))
+        return Texture(_fxCanvas.snapshot(null, null))
     }
 
     internal fun throwIfUninitialized() {
@@ -136,6 +137,10 @@ object Game {
             throw IllegalStateException("Game has not been initialized yet.")
         }
     }
+
+    internal val fxStage: Stage get() = _fxStage
+
+    internal val fxCanvas: Canvas get() = _fxCanvas
 
     private fun initialize() {
         try {
@@ -158,8 +163,10 @@ object Game {
     }
 
     private fun initializeCanvas() {
-        fxCanvas = Canvas(width.toDouble(), height.toDouble())
-        fxRoot.children.add(fxCanvas)
+        _fxCanvas = Canvas(width.toDouble(), height.toDouble())
+        _fxCanvas.onMouseMoved = EventHandler { Mouse.onMouseMoved(it) }
+        _fxCanvas.onMouseDragged = EventHandler { Mouse.onMouseMoved(it) }
+        fxRoot.children.add(_fxCanvas)
     }
 
     private fun initializeScene() {
@@ -168,15 +175,17 @@ object Game {
             val scaleX = fxScene.width / width.toDouble()
             val scaleY = fxScene.height / height.toDouble()
             val scale = scaleX.coerceAtMost(scaleY)
-            fxCanvas.scaleX = scale
-            fxCanvas.scaleY = scale
+            _fxCanvas.scaleX = scale
+            _fxCanvas.scaleY = scale
         }
         fxScene.widthProperty().addListener { _, _, _ -> resizedListener() }
         fxScene.heightProperty().addListener { _, _, _ -> resizedListener() }
+        fxScene.onMouseEntered = EventHandler { Mouse.onMouseEntered() }
+        fxScene.onMouseExited = EventHandler { Mouse.onMouseExited() }
     }
 
     private fun initializeRenderer() {
-        Renderer.initialize(fxCanvas)
+        Renderer.initialize(_fxCanvas)
     }
 
     private fun initializeKeyboard() {
@@ -186,21 +195,21 @@ object Game {
     }
 
     private fun initializeStage() {
-        fxStage = Stage()
-        fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
-        fxStage.title = config.title
-        fxStage.fullScreenExitHint = ""
-        fxStage.fullScreenExitKeyCombination = KeyCombination.NO_MATCH
-        fxStage.isFullScreen = config.fullscreen
-        fxStage.isResizable = config.resizable
+        _fxStage = Stage()
+        _fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
+        _fxStage.title = config.title
+        _fxStage.fullScreenExitHint = ""
+        _fxStage.fullScreenExitKeyCombination = KeyCombination.NO_MATCH
+        _fxStage.isFullScreen = config.fullscreen
+        _fxStage.isResizable = config.resizable
         config.icon?.let {
             _icon = Texture(it)
-            fxStage.icons.add(_icon!!.fxImage)
+            _fxStage.icons.add(_icon!!.fxImage)
         }
-        fxStage.scene = fxScene
-        fxStage.setOnCloseRequest { exit() }
-        fxStage.centerOnScreen()
-        fxStage.show()
+        _fxStage.scene = fxScene
+        _fxStage.setOnCloseRequest { exit() }
+        _fxStage.centerOnScreen()
+        _fxStage.show()
     }
 
     private fun run() {
@@ -208,6 +217,7 @@ object Game {
         gameLoop = GameLoop {
             Time.update()
             Keyboard.update()
+            Mouse.update()
             if (cleanup) {
                 System.gc()
                 cleanup = false

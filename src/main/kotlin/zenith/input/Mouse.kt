@@ -74,8 +74,7 @@ object Mouse {
             try {
                 it.mouseMove(position.x.toDouble(), position.y.toDouble())
                 _position = clampedValue
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) {}
         }
     }
 }

@@ -5,14 +5,12 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.robot.Robot
 import zenith.core.Game
 import zenith.math.Vector2
-import zenith.math.div
-import kotlin.math.ceil
-import kotlin.math.floor
 import kotlin.math.round
 
 object Mouse {
     private var _newPosition: Vector2? = null
     private var _position = Vector2.ZERO
+    private var insideScene = false
     private val robot: Robot?
 
     var position: Vector2
@@ -23,14 +21,17 @@ object Mouse {
         Game.throwIfUninitialized()
         Game.fxCanvas.onMouseMoved = EventHandler { onMouseMoved(it) }
         Game.fxCanvas.onMouseDragged = EventHandler { onMouseMoved(it) }
+        Game.fxStage.scene.onMouseEntered = EventHandler { insideScene = true }
+        Game.fxStage.scene.onMouseExited = EventHandler { insideScene = false }
         robot = try {
             Robot()
         } catch (e: Exception) {
             null
         }
         robot?.let {
-            val local = Game.fxCanvas.screenToLocal(robot.mouseX, robot.mouseY)
-            _position = Vector2(local.x, local.y)
+            val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
+            insideScene = local.x >= 0 && local.x < Game.width && local.y >= 0 && local.y < Game.height
+            _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
         }
     }
 
@@ -50,18 +51,19 @@ object Mouse {
     }
 
     private fun move(value: Vector2) {
-        if (!Game.focused) {
+        if (!Game.focused || !insideScene) {
             return
         }
         robot?.let {
-            val current = Game.fxCanvas.screenToLocal(round(it.mouseX), round(it.mouseY))
-            if (round(current.x) < 0 || round(current.x) > Game.width || round(current.y) < 0 || round(current.y) > Game.height) {
-                return
-            }
             val clampedValue = value.clamp(Vector2.ZERO, Game.size)
             val screen = Game.fxCanvas.localToScreen(round(clampedValue.x.toDouble()), round(clampedValue.y.toDouble()))
             try {
-                it.mouseMove(round(screen.x), round(screen.y))
+                val move = Vector2(screen.x, screen.y).round()
+                val local = Game.fxCanvas.screenToLocal(screen.x, screen.y)
+                if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
+                    return
+                }
+                it.mouseMove(move.x.toDouble(), move.y.toDouble())
                 _position = clampedValue
             } catch (_: Exception) {}
         }

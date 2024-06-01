@@ -2,10 +2,7 @@ package zenith.math
 
 import javafx.beans.NamedArg
 import java.util.*
-import kotlin.math.acos
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class Vector2 {
     val x: Float
@@ -124,7 +121,7 @@ class Vector2 {
     }
 
     fun round(): Vector2 {
-        return Vector2(Math.round(x), Math.round(y))
+        return Vector2(x.roundToInt(), y.roundToInt())
     }
 
     fun abs(): Vector2 {

@@ -5,75 +5,67 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.robot.Robot
 import zenith.core.Game
 import zenith.math.Vector2
+import zenith.math.div
+import kotlin.math.round
 
 object Mouse {
-    private var _newPosition = Vector2.ZERO
+    private var _newPosition: Vector2? = null
     private var _position = Vector2.ZERO
-    private var _newInsideScreen = false
-    private var _insideScreen = false
     private val robot: Robot?
 
     var position: Vector2
         get() = _position
         set(value) = move(value)
 
-    val insideScreen: Boolean
-        get() = _insideScreen
-
     init {
         Game.throwIfUninitialized()
         Game.fxCanvas.onMouseMoved = EventHandler { onMouseMoved(it) }
         Game.fxCanvas.onMouseDragged = EventHandler { onMouseMoved(it) }
-        Game.fxStage.scene.onMouseEntered = EventHandler { onMouseEntered() }
-        Game.fxStage.scene.onMouseExited = EventHandler { onMouseExited() }
         robot = try {
             Robot()
         } catch (e: Exception) {
             null
         }
+        robot?.let {
+            val local = Game.fxCanvas.screenToLocal(robot.mouseX, robot.mouseY)
+            _position = Vector2(local.x, local.y)
+        }
     }
 
     internal fun update() {
         updatePosition()
-        updateInsideScreen()
     }
 
     private fun onMouseMoved(event: MouseEvent) {
         _newPosition = Vector2(event.x, event.y)
     }
 
-    private fun onMouseEntered() {
-        _newInsideScreen = true
-    }
-
-    private fun onMouseExited() {
-        _newInsideScreen = false
-    }
-
     private fun updatePosition() {
-        _position = _newPosition
-    }
-
-    private fun updateInsideScreen() {
-        _insideScreen = _newInsideScreen
+        _newPosition?.let {
+            _position = it
+            _newPosition = null
+        }
     }
 
     private fun move(value: Vector2) {
-        if (!_insideScreen || _position == value) {
+        if (!Game.focused) {
             return
         }
         robot?.let {
-            val clampedValue = value.clamp(Vector2.ZERO + 1, Game.size - 1)
-            val stage = Game.fxStage
-            val canvas = Game.fxCanvas
-            val stagePosition = Vector2(stage.x + stage.scene.x, stage.y + stage.scene.y)
-            val canvasSize = Vector2(canvas.width * canvas.scaleX, canvas.height * canvas.scaleY)
-            val stageSize = Vector2(stage.scene.width, stage.scene.height)
-            val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
-            val position = stagePosition + (stageSize / 2 - canvasSize / 2) + scaledValue
+            val current = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
+            val scale = 1 / Vector2(Game.fxCanvas.scaleX, Game.fxCanvas.scaleY)
+            if (current.x <= -scale.x || current.x > Game.width + scale.x || current.y < -scale.y || current.y > Game.height + scale.y) {
+                return
+            }
+            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
+            val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
             try {
-                it.mouseMove(position.x.toDouble(), position.y.toDouble())
-                _position = clampedValue
+                val local = Game.fxCanvas.screenToLocal(screen.x, screen.y)
+                if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
+                    return
+                }
+                it.mouseMove(round(screen.x), round(screen.y))
+                _position = Vector2(local.x, local.y).round()
             } catch (_: Exception) {}
         }
     }

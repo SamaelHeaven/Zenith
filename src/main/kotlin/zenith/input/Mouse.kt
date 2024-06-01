@@ -5,7 +5,6 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.robot.Robot
 import zenith.core.Game
 import zenith.math.Vector2
-import kotlin.math.round
 
 object Mouse {
     private var _newPosition: Vector2? = null

@@ -10,7 +10,6 @@ import kotlin.math.round
 object Mouse {
     private var _newPosition: Vector2? = null
     private var _position = Vector2.ZERO
-    private var insideScene = false
     private val robot: Robot?
 
     var position: Vector2
@@ -21,8 +20,6 @@ object Mouse {
         Game.throwIfUninitialized()
         Game.fxCanvas.onMouseMoved = EventHandler { onMouseMoved(it) }
         Game.fxCanvas.onMouseDragged = EventHandler { onMouseMoved(it) }
-        Game.fxStage.scene.onMouseEntered = EventHandler { insideScene = true }
-        Game.fxStage.scene.onMouseExited = EventHandler { insideScene = false }
         robot = try {
             Robot()
         } catch (e: Exception) {
@@ -30,7 +27,6 @@ object Mouse {
         }
         robot?.let {
             val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
-            insideScene = local.x >= 0 && local.x < Game.width && local.y >= 0 && local.y < Game.height
             _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
         }
     }
@@ -51,10 +47,14 @@ object Mouse {
     }
 
     private fun move(value: Vector2) {
-        if (!Game.focused || !insideScene) {
+        if (!Game.focused) {
             return
         }
         robot?.let {
+            val current = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
+            if (current.x < 0 || current.x > Game.width || current.y < 0 || current.y > Game.height) {
+                return
+            }
             val clampedValue = value.clamp(Vector2.ZERO, Game.size)
             val screen = Game.fxCanvas.localToScreen(round(clampedValue.x.toDouble()), round(clampedValue.y.toDouble()))
             try {

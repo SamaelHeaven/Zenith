@@ -44,6 +44,10 @@ object Mouse {
             _position = it
             _newPosition = null
         }
+        robot?.let {
+            val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
+            _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
+        }
     }
 
     private fun move(value: Vector2) {
@@ -51,18 +55,10 @@ object Mouse {
             return
         }
         robot?.let {
-            val current = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
-            if (current.x < 0 || current.x > Game.width || current.y < 0 || current.y > Game.height) {
-                return
-            }
-            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
-            val screen = Game.fxCanvas.localToScreen(round(clampedValue.x.toDouble()), round(clampedValue.y.toDouble()))
+            val clampedValue = value.clamp(Vector2.ZERO, Game.size).round()
+            val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
             try {
                 val move = Vector2(screen.x, screen.y).round()
-                val local = Game.fxCanvas.screenToLocal(screen.x, screen.y)
-                if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
-                    return
-                }
                 it.mouseMove(move.x.toDouble(), move.y.toDouble())
                 _position = clampedValue
             } catch (_: Exception) {}

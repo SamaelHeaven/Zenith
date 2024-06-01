@@ -5,13 +5,22 @@ import javafx.fxml.FXMLLoader
 
 @DefaultProperty("content")
 class MapNode<K, V> : HashMap<K, V>() {
-    var content: List<KeyValuePair<K, V>>
-        get() = null!!
-        set(_) {}
+    var content: KeyValuePair<K, V>?
+        get() = null
+        set(content) {
+            if (content is KeyValuePair<*, *>) {
+                super.put(content.key, content.value)
+            }
+        }
 
     @Suppress("UNCHECKED_CAST")
     override fun put(key: K, value: V): V? {
-        val caller = Class.forName(Thread.currentThread().stackTrace[3].className).toString().split("$").firstOrNull()
+        val callerLevel = 3
+        val stacktrace = Thread.currentThread().stackTrace
+        if (stacktrace.size <= callerLevel) {
+            return super.put(key, value)
+        }
+        val caller = Class.forName(stacktrace[callerLevel].className).toString().split("$").firstOrNull()
         if (caller.toString() != FXMLLoader::class.java.toString()) {
             return super.put(key, value)
         }

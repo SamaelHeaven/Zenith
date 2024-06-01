@@ -1,5 +1,6 @@
 package zenith.core
 
+import javafx.animation.AnimationTimer
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -137,13 +138,18 @@ object Game {
     }
 
     private fun initialize() {
-        initializeRoot()
-        initializeCanvas()
-        initializeScene()
-        initializeRenderer()
-        initializeKeyboard()
-        initializeStage()
-        System.setErr(err)
+        try {
+            initializeRoot()
+            initializeCanvas()
+            initializeScene()
+            initializeRenderer()
+            initializeKeyboard()
+            initializeStage()
+        } catch (e: Exception) {
+            e.printStackTrace(err)
+        } finally {
+            System.setErr(err)
+        }
     }
 
     private fun initializeRoot() {
@@ -214,5 +220,11 @@ object Game {
             currentScene?.update()
         }
         gameLoop.start()
+    }
+
+    private class GameLoop(val callback: () -> Unit) : AnimationTimer() {
+        override fun handle(arg: Long) {
+            callback()
+        }
     }
 }

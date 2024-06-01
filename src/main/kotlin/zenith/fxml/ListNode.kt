@@ -8,6 +8,8 @@ class ListNode<E> : ArrayList<E>() {
     var content: Any?
         get() = null
         set(content) {
-            add(content as E)
+            if (content != null) {
+                add(content as E)
+            }
         }
 }

@@ -63,7 +63,7 @@ object Mouse {
             val canvas = Game.fxCanvas
             val stagePosition = Vector2(stage.x, stage.y)
             val canvasSize = Vector2(canvas.width * canvas.scaleX, canvas.height * canvas.scaleY)
-            val stageSize = Vector2(stage.width, stage.height)
+            val stageSize = Vector2(stage.width * stage.outputScaleX, stage.height * stage.outputScaleY)
             val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
             val position = stagePosition + (stageSize / 2 - canvasSize / 2) + scaledValue
             try {

@@ -14,29 +14,7 @@ object Mouse {
 
     var position: Vector2
         get() = _position
-        set(value) {
-            if (_position == value) {
-                return
-            }
-            robot?.let {
-                val clampedValue = value.clamp(Vector2.ZERO, Game.size)
-                val stage = Game.fxStage
-                val canvas = Game.fxCanvas
-                val stagePosition = Vector2(stage.x, stage.y)
-                val canvasSize = Vector2(canvas.width * canvas.scaleX, canvas.height * canvas.scaleY)
-                val stageSize = Vector2(stage.width, stage.height)
-                val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
-                val position = stagePosition + ((stageSize - canvasSize) / 2) + scaledValue
-                println("Stage position " + stagePosition)
-                println("Stage size " + stageSize)
-                println("Scaled value " + scaledValue)
-                println("Position " + position)
-                try {
-                    it.mouseMove(position.x.toDouble(), position.y.toDouble())
-                    _position = clampedValue
-                } catch (_: Exception) {}
-            }
-        }
+        set(value) = move(value)
 
     val insideScreen: Boolean
         get() = _insideScreen
@@ -73,5 +51,25 @@ object Mouse {
 
     private fun updateInsideScreen() {
         _insideScreen = _newInsideScreen
+    }
+
+    private fun move(value: Vector2) {
+        if (_position == value) {
+            return
+        }
+        robot?.let {
+            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
+            val stage = Game.fxStage
+            val canvas = Game.fxCanvas
+            val stagePosition = Vector2(stage.x, stage.y)
+            val canvasSize = Vector2(canvas.width * canvas.scaleX, canvas.height * canvas.scaleY)
+            val stageSize = Vector2(stage.width, stage.height)
+            val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
+            val position = stagePosition + (stageSize / 2 - canvasSize / 2) + scaledValue
+            try {
+                it.mouseMove(position.x.toDouble(), position.y.toDouble())
+                _position = clampedValue
+            } catch (_: Exception) {}
+        }
     }
 }

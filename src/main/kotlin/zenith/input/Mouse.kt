@@ -26,7 +26,7 @@ object Mouse {
                 val canvasSize = Vector2(canvas.width * canvas.scaleX, canvas.height * canvas.scaleY)
                 val stageSize = Vector2(stage.width, stage.height)
                 val scaledValue = clampedValue * Vector2(canvas.scaleX, canvas.scaleY)
-                val position = stagePosition + ((stageSize - canvasSize) / 2) + (scaledValue / 2)
+                val position = stagePosition + ((stageSize - canvasSize) / 2) + scaledValue
                 println("Stage position " + stagePosition)
                 println("Stage size " + stageSize)
                 println("Scaled value " + scaledValue)

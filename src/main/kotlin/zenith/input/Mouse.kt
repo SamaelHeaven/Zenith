@@ -15,6 +15,9 @@ object Mouse {
     var position: Vector2
         get() = _position
         set(value) {
+            if (_position == value) {
+                return
+            }
             robot?.let {
                 val clampedValue = value.clamp(Vector2.ZERO, Game.size)
                 val stage = Game.fxStage

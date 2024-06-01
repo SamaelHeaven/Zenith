@@ -6,6 +6,8 @@ import javafx.scene.robot.Robot
 import zenith.core.Game
 import zenith.math.Vector2
 import zenith.math.div
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.round
 
 object Mouse {
@@ -52,20 +54,15 @@ object Mouse {
             return
         }
         robot?.let {
-            val current = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
-            val scale = 1 / Vector2(Game.fxCanvas.scaleX, Game.fxCanvas.scaleY)
-            if (current.x <= -scale.x || current.x > Game.width + scale.x || current.y < -scale.y || current.y > Game.height + scale.y) {
+            val current = Game.fxCanvas.screenToLocal(round(it.mouseX), round(it.mouseY))
+            if (round(current.x) < 0 || round(current.x) > Game.width || round(current.y) < 0 || round(current.y) > Game.height) {
                 return
             }
             val clampedValue = value.clamp(Vector2.ZERO, Game.size)
-            val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
+            val screen = Game.fxCanvas.localToScreen(round(clampedValue.x.toDouble()), round(clampedValue.y.toDouble()))
             try {
-                val local = Game.fxCanvas.screenToLocal(screen.x, screen.y)
-                if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
-                    return
-                }
                 it.mouseMove(round(screen.x), round(screen.y))
-                _position = Vector2(local.x, local.y).round()
+                _position = clampedValue
             } catch (_: Exception) {}
         }
     }

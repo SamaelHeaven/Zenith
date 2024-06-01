@@ -39,13 +39,13 @@ object Mouse {
     }
 
     private fun updatePosition() {
-        _newPosition?.let {
-            _position = it
-            _newPosition = null
-        }
         robot?.let {
             val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
             _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
+        }
+        _newPosition?.let {
+            _position = it
+            _newPosition = null
         }
     }
 

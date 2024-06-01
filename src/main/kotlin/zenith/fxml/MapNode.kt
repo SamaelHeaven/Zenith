@@ -12,7 +12,6 @@ class MapNode<K, V> : HashMap<K, V>() {
     @Suppress("UNCHECKED_CAST")
     override fun put(key: K, value: V): V? {
         val caller = Class.forName(Thread.currentThread().stackTrace[3].className).toString().split("$").firstOrNull()
-        println(caller)
         if (caller.toString() != FXMLLoader::class.java.toString()) {
             return super.put(key, value)
         }

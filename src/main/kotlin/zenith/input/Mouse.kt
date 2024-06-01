@@ -57,8 +57,7 @@ object Mouse {
             val clampedValue = value.clamp(Vector2.ZERO, Game.size)
             val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
             try {
-                val move = Vector2(screen.x, screen.y).round()
-                it.mouseMove(move.x.toDouble(), move.y.toDouble())
+                it.mouseMove(screen.x, screen.y)
                 _position = clampedValue
             } catch (_: Exception) {}
         }

@@ -1,18 +1,14 @@
 package zenith.core
 
-import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import zenith.paint.Color
 
 object Renderer {
-    private lateinit var graphicsContext: GraphicsContext
+    private val graphicsContext: GraphicsContext
 
     init {
         Game.throwIfUninitialized()
-    }
-
-    internal fun initialize(fxCanvas: Canvas) {
-        graphicsContext = fxCanvas.graphicsContext2D
+        graphicsContext = Game.fxCanvas.graphicsContext2D
     }
 
     fun clearBackground(color: Color) {

@@ -2,7 +2,6 @@ package zenith.core
 
 import javafx.animation.AnimationTimer
 import javafx.application.Platform
-import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.canvas.Canvas
 import javafx.scene.input.KeyCombination
@@ -147,8 +146,6 @@ object Game {
             initializeRoot()
             initializeCanvas()
             initializeScene()
-            initializeRenderer()
-            initializeKeyboard()
             initializeStage()
         } catch (e: Exception) {
             e.printStackTrace(err)
@@ -164,8 +161,6 @@ object Game {
 
     private fun initializeCanvas() {
         _fxCanvas = Canvas(width.toDouble(), height.toDouble())
-        _fxCanvas.onMouseMoved = EventHandler { Mouse.onMouseMoved(it) }
-        _fxCanvas.onMouseDragged = EventHandler { Mouse.onMouseMoved(it) }
         fxRoot.children.add(_fxCanvas)
     }
 
@@ -180,18 +175,6 @@ object Game {
         }
         fxScene.widthProperty().addListener { _, _, _ -> resizedListener() }
         fxScene.heightProperty().addListener { _, _, _ -> resizedListener() }
-        fxScene.onMouseEntered = EventHandler { Mouse.onMouseEntered() }
-        fxScene.onMouseExited = EventHandler { Mouse.onMouseExited() }
-    }
-
-    private fun initializeRenderer() {
-        Renderer.initialize(_fxCanvas)
-    }
-
-    private fun initializeKeyboard() {
-        fxScene.onKeyTyped = EventHandler { Keyboard.onKeyTyped(it) }
-        fxScene.onKeyPressed = EventHandler { Keyboard.onKeyPressed(it) }
-        fxScene.onKeyReleased = EventHandler { Keyboard.onKeyReleased(it) }
     }
 
     private fun initializeStage() {

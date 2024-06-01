@@ -1,5 +1,6 @@
 package zenith.input
 
+import javafx.event.EventHandler
 import javafx.scene.input.KeyEvent
 import zenith.core.Game
 import java.util.*
@@ -26,6 +27,9 @@ object Keyboard {
 
     init {
         Game.throwIfUninitialized()
+        Game.fxStage.scene.onKeyTyped = EventHandler { onKeyTyped(it) }
+        Game.fxStage.scene.onKeyPressed = EventHandler { onKeyPressed(it) }
+        Game.fxStage.scene.onKeyReleased = EventHandler { onKeyReleased(it) }
     }
 
     fun isKeyDown(key: Key): Boolean {
@@ -56,7 +60,7 @@ object Keyboard {
         updateUpKeys()
     }
 
-    internal fun onKeyTyped(event: KeyEvent) {
+    private fun onKeyTyped(event: KeyEvent) {
         if (event.character.isEmpty()) {
             return
         }
@@ -66,11 +70,11 @@ object Keyboard {
         }
     }
 
-    internal fun onKeyPressed(event: KeyEvent) {
+    private fun onKeyPressed(event: KeyEvent) {
         newPressedKeys.add(Key.get(event.code))
     }
 
-    internal fun onKeyReleased(event: KeyEvent) {
+    private fun onKeyReleased(event: KeyEvent) {
         newReleasedKeys.add(Key.get(event.code))
     }
 

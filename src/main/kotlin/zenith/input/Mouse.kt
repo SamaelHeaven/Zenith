@@ -54,7 +54,7 @@ object Mouse {
             return
         }
         robot?.let {
-            val clampedValue = value.clamp(Vector2.ZERO, Game.size).round()
+            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
             val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
             try {
                 val move = Vector2(screen.x, screen.y).round()

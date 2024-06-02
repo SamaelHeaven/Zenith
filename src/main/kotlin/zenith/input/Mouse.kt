@@ -11,9 +11,8 @@ object Mouse {
     private var _position = Vector2.ZERO
     private val robot: Robot?
 
-    var position: Vector2
+    val position: Vector2
         get() = _position
-        set(value) = move(value)
 
     init {
         Game.throwIfUninitialized()
@@ -39,27 +38,9 @@ object Mouse {
     }
 
     private fun updatePosition() {
-        robot?.let {
-            val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
-            _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
-        }
         _newPosition?.let {
             _position = it
             _newPosition = null
-        }
-    }
-
-    private fun move(value: Vector2) {
-        if (!Game.focused) {
-            return
-        }
-        robot?.let {
-            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
-            val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
-            try {
-                it.mouseMove(screen.x, screen.y)
-                _position = clampedValue
-            } catch (_: Exception) {}
         }
     }
 }

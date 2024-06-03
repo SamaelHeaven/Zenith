@@ -53,6 +53,9 @@ object Mouse {
     }
 
     private fun move(value: Vector2) {
+        if (!Game.focused) {
+            return
+        }
         try {
             val point = MouseInfo.getPointerInfo().location
             val local = Game.fxCanvas.screenToLocal(point.x.toDouble(), point.y.toDouble())

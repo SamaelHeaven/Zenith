@@ -125,7 +125,7 @@ class Vector2 {
     }
 
     fun abs(): Vector2 {
-        return Vector2(kotlin.math.abs(x), kotlin.math.abs(y))
+        return Vector2(abs(x), abs(y))
     }
 
     fun normalize(): Vector2 {

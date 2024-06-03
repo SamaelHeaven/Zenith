@@ -2,17 +2,20 @@ package zenith.input
 
 import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
-import javafx.scene.robot.Robot
 import zenith.core.Game
 import zenith.math.Vector2
+import java.awt.MouseInfo
+import java.awt.Robot
+import kotlin.math.roundToInt
 
 object Mouse {
     private var _newPosition: Vector2? = null
     private var _position = Vector2.ZERO
     private val robot: Robot?
 
-    val position: Vector2
+    var position: Vector2
         get() = _position
+        set(value) = move(value)
 
     init {
         Game.throwIfUninitialized()
@@ -23,10 +26,7 @@ object Mouse {
         } catch (e: Exception) {
             null
         }
-        robot?.let {
-            val local = Game.fxCanvas.screenToLocal(it.mouseX, it.mouseY)
-            _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
-        }
+        updatePosition()
     }
 
     internal fun update() {
@@ -41,6 +41,31 @@ object Mouse {
         _newPosition?.let {
             _position = it
             _newPosition = null
+        }
+        try {
+            val point = MouseInfo.getPointerInfo().location
+            val local = Game.fxCanvas.screenToLocal(point.x.toDouble(), point.y.toDouble())
+            _position = Vector2(local.x, local.y).clamp(Vector2.ZERO, Game.size)
+        } catch (_: Exception) {
+            return
+        }
+    }
+
+    private fun move(value: Vector2) {
+        try {
+            val point = MouseInfo.getPointerInfo().location
+            val local = Game.fxCanvas.screenToLocal(point.x.toDouble(), point.y.toDouble())
+            if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
+                return
+            }
+        } catch (_: Exception) {
+            return
+        }
+        robot?.let {
+            val clampedValue = value.clamp(Vector2.ZERO, Game.size)
+            val screen = Game.fxCanvas.localToScreen(clampedValue.x.toDouble(), clampedValue.y.toDouble())
+            it.mouseMove(screen.x.roundToInt(), screen.y.roundToInt())
+            _position = clampedValue
         }
     }
 }

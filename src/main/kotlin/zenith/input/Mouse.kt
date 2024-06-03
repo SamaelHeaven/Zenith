@@ -6,6 +6,7 @@ import zenith.core.Game
 import zenith.math.Vector2
 import java.awt.MouseInfo
 import java.awt.Robot
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 object Mouse {
@@ -55,7 +56,9 @@ object Mouse {
         try {
             val point = MouseInfo.getPointerInfo().location
             val local = Game.fxCanvas.screenToLocal(point.x.toDouble(), point.y.toDouble())
-            if (local.x < 0 || local.x > Game.width || local.y < 0 || local.y > Game.height) {
+            val scale = Vector2(Game.fxCanvas.scaleX, Game.fxCanvas.scaleY)
+            val maxScale = max(1 / scale.x, 1 / scale.y)
+            if (local.x < -maxScale || local.x > Game.width + maxScale || local.y < -maxScale || local.y > Game.height + maxScale) {
                 return
             }
         } catch (_: Exception) {

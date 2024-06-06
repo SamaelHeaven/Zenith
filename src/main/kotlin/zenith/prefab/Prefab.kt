@@ -1,5 +1,8 @@
-package zenith.core
+package zenith.prefab
 
+import zenith.core.Component
+import zenith.core.Entity
+import zenith.core.EntityProvider
 import zenith.fxml.ListNode
 import zenith.math.Vector2
 

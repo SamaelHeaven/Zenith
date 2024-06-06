@@ -212,6 +212,9 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     }
 
     internal fun update() {
+        if (disable) {
+            return
+        }
         for (component in _components) {
             component.callUpdate()
         }
@@ -219,6 +222,9 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     }
 
     internal fun fixedUpdate() {
+        if (disable) {
+            return
+        }
         for (component in _components) {
             component.callFixedUpdate()
         }

@@ -6,13 +6,27 @@ import zenith.core.Game
 import zenith.math.Vector2
 import java.awt.MouseInfo
 import java.awt.Robot
+import java.util.*
 import kotlin.math.max
 import kotlin.math.roundToInt
 
 object Mouse {
+    private val newPressedButtons = mutableSetOf<MouseButton>()
+    private val newReleasedButtons = mutableSetOf<MouseButton>()
+    private val newClickedButtons = mutableSetOf<MouseButton>()
     private var _newPosition: Vector2? = null
     private var _position = Vector2.ZERO
+    private val _downButtons = mutableSetOf<MouseButton>()
+    private val _upButtons = mutableSetOf<MouseButton>()
+    private val _pressedButtons = mutableSetOf<MouseButton>()
+    private val _releasedButtons = mutableSetOf<MouseButton>()
+    private val _clickedButtons = mutableSetOf<MouseButton>()
     private val robot: Robot?
+    val downButtons get() = Collections.unmodifiableSet(_downButtons)
+    val upButtons get() = Collections.unmodifiableSet(_upButtons)
+    val pressedButtons get() = Collections.unmodifiableSet(_pressedButtons)
+    val releasedButtons get() = Collections.unmodifiableSet(_releasedButtons)
+    val clickedButtons get() = Collections.unmodifiableSet(_clickedButtons)
 
     var position: Vector2
         get() = _position
@@ -22,6 +36,9 @@ object Mouse {
         Game.throwIfUninitialized()
         Game.fxCanvas.onMouseMoved = EventHandler { onMouseMoved(it) }
         Game.fxCanvas.onMouseDragged = EventHandler { onMouseMoved(it) }
+        Game.fxCanvas.onMousePressed = EventHandler { onMousePressed(it) }
+        Game.fxCanvas.onMouseReleased = EventHandler { onMouseReleased(it) }
+        Game.fxCanvas.onMouseClicked = EventHandler { onMouseClicked(it) }
         robot = try {
             Robot()
         } catch (e: Exception) {
@@ -30,12 +47,53 @@ object Mouse {
         updatePosition()
     }
 
+    fun isButtonDown(button: MouseButton): Boolean {
+        return _downButtons.contains(button)
+    }
+
+    fun isButtonUp(button: MouseButton): Boolean {
+        return _upButtons.contains(button)
+    }
+
+    fun isButtonPressed(button: MouseButton): Boolean {
+        return _pressedButtons.contains(button)
+    }
+
+    fun isButtonReleased(button: MouseButton): Boolean {
+        return _releasedButtons.contains(button)
+    }
+
+    fun isButtonClicked(button: MouseButton): Boolean {
+        return _clickedButtons.contains(button)
+    }
+
     internal fun update() {
         updatePosition()
+        if (!Game.focused) {
+            reset()
+            return
+        }
+        updatePressedButtons()
+        updateDownButtons()
+        updateReleasedButtons()
+        updateUpButtons()
+        updateClickedButtons()
     }
 
     private fun onMouseMoved(event: MouseEvent) {
         _newPosition = Vector2(event.x, event.y)
+    }
+
+    private fun onMousePressed(event: MouseEvent) {
+        newPressedButtons.add(MouseButton.get(event.button))
+    }
+
+    private fun onMouseReleased(event: MouseEvent) {
+        newReleasedButtons.add(MouseButton.get(event.button))
+    }
+
+    private fun onMouseClicked(event: MouseEvent) {
+        newClickedButtons.add(MouseButton.get(event.button))
     }
 
     private fun updatePosition() {
@@ -50,6 +108,36 @@ object Mouse {
         } catch (_: Exception) {
             return
         }
+    }
+
+    private fun updateDownButtons() {
+        _downButtons.addAll(newPressedButtons)
+        newPressedButtons.clear()
+    }
+
+    private fun updateUpButtons() {
+        _upButtons.clear()
+        _upButtons.addAll(MouseButton.entries)
+        _upButtons.removeAll(_downButtons)
+    }
+
+    private fun updatePressedButtons() {
+        _pressedButtons.clear()
+        _pressedButtons.addAll(newPressedButtons)
+        _pressedButtons.removeAll(_downButtons)
+    }
+
+    private fun updateReleasedButtons() {
+        _releasedButtons.clear()
+        _releasedButtons.addAll(newReleasedButtons)
+        newReleasedButtons.clear()
+        _downButtons.removeAll(_releasedButtons)
+    }
+
+    private fun updateClickedButtons() {
+        _clickedButtons.clear()
+        _clickedButtons.addAll(newClickedButtons)
+        newClickedButtons.clear()
     }
 
     private fun move(value: Vector2) {
@@ -73,5 +161,15 @@ object Mouse {
             it.mouseMove(screen.x.roundToInt(), screen.y.roundToInt())
             _position = clampedValue
         }
+    }
+
+    private fun reset() {
+        newPressedButtons.clear()
+        _downButtons.clear()
+        newReleasedButtons.clear()
+        _releasedButtons.clear()
+        newClickedButtons.clear()
+        _clickedButtons.clear()
+        updateUpButtons()
     }
 }

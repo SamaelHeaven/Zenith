@@ -85,11 +85,8 @@ object Keyboard {
 
     private fun updateUpKeys() {
         _upKeys.clear()
-        for (key in Key.entries) {
-            if (!_downKeys.contains(key)) {
-                _upKeys.add(key)
-            }
-        }
+        _upKeys.addAll(Key.entries)
+        _upKeys.removeAll(_downKeys)
     }
 
     private fun updatePressedKeys() {

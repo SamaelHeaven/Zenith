@@ -43,6 +43,7 @@ abstract class Prefab : ListNode<Component>(), EntityProvider {
 
     final override fun provide(): Entity {
         val entity = Entity(name, position, scale, origin, pivotPoint, rotation, zIndex, disable, tags, components)
+        entity.addComponents(this)
         build(entity)
         return entity
     }

@@ -12,10 +12,10 @@ class KeyValuePair<K, V>(@NamedArg("key") key: K, @NamedArg("value") value: V) :
         var actualKey = key
         var actualValue = value
         @Suppress("UNCHECKED_CAST") if (Reflection.getCallers().contains(FXMLLoader::class.java)) {
-            if (key is List<*>) {
+            if (key is Collection<*>) {
                 actualKey = key.first() as K
             }
-            if (value is List<*>) {
+            if (value is Collection<*>) {
                 actualValue = value.first() as V
             }
         }

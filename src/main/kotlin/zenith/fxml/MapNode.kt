@@ -2,6 +2,7 @@ package zenith.fxml
 
 import javafx.beans.DefaultProperty
 import javafx.fxml.FXMLLoader
+import zenith.core.Reflection
 
 @DefaultProperty("content")
 open class MapNode<K, V> : HashMap<K, V>() {
@@ -15,13 +16,8 @@ open class MapNode<K, V> : HashMap<K, V>() {
 
     @Suppress("UNCHECKED_CAST")
     final override fun put(key: K, value: V): V? {
-        val callerLevel = 3
-        val stacktrace = Thread.currentThread().stackTrace
-        if (stacktrace.size <= callerLevel) {
-            return super.put(key, value)
-        }
-        val caller = Class.forName(stacktrace[callerLevel].className).toString().split("$").firstOrNull()
-        if (caller.toString() != FXMLLoader::class.java.toString()) {
+        val clazz = Reflection.getCallerClass(3) ?: return super.put(key, value)
+        if (clazz.toString().split("$").firstOrNull() != FXMLLoader::class.java.toString()) {
             return super.put(key, value)
         }
         val keyValuePair = value as KeyValuePair<K, V>

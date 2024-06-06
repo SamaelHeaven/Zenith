@@ -9,4 +9,17 @@ object Reflection {
             null
         }
     }
+
+    fun getCallers(): List<Class<*>> {
+        val result = mutableListOf<Class<*>>()
+        val stacktrace = Thread.currentThread().stackTrace
+        for (element in stacktrace) {
+            try {
+                result.add(Class.forName(element.className))
+            } catch (_: Exception) {
+                continue
+            }
+        }
+        return result
+    }
 }

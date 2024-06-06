@@ -207,10 +207,10 @@ object Game {
             }
             if (currentScene != _scene) {
                 currentScene = _scene
-                currentScene?.start()
+                currentScene?.callInitialize()
                 cleanup = true
             }
-            currentScene?.update()
+            currentScene?.callUpdate()
         }
         gameLoop.start()
     }

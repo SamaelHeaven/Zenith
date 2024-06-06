@@ -211,7 +211,7 @@ enum class Key(private val fxKeyCode: KeyCode) {
     INFO(KeyCode.INFO);
 
     companion object {
-        private val keys = HashMap<KeyCode, Key>()
+        private val keys = mutableMapOf<KeyCode, Key>()
 
         init {
             for (key in entries) {

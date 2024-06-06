@@ -20,7 +20,7 @@ class Texture {
     val size get() = Vector2(width, height)
 
     companion object {
-        private val cachedFxImages = HashMap<String, Image>()
+        private val cachedFxImages = mutableMapOf<String, Image>()
         var cacheByDefault = true
 
         @JvmStatic

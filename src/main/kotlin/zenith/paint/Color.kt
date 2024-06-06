@@ -180,7 +180,7 @@ class Color private constructor(override val fxPaint: javafx.scene.paint.Paint) 
 
         @JvmStatic
         fun valueOf(value: String): Color {
-            val namedColor = NamedColor.get(value.trim().uppercase(Locale.ENGLISH))
+            val namedColor = NamedColor.valueOf(value.trim().uppercase(Locale.ENGLISH))
             namedColor?.let {
                 return it
             }

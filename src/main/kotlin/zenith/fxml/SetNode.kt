@@ -3,7 +3,7 @@ package zenith.fxml
 import javafx.beans.DefaultProperty
 
 @DefaultProperty("content")
-class SetNode<E> : HashSet<E>() {
+open class SetNode<E> : HashSet<E>() {
     var content: E?
         get() = null
         set(content) {

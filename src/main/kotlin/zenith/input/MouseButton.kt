@@ -9,7 +9,7 @@ enum class MouseButton(private val fxButton: javafx.scene.input.MouseButton) {
     NONE(javafx.scene.input.MouseButton.NONE);
 
     companion object {
-        private val buttons = HashMap<javafx.scene.input.MouseButton, MouseButton>()
+        private val buttons = mutableMapOf<javafx.scene.input.MouseButton, MouseButton>()
 
         init {
             for (button in MouseButton.entries) {

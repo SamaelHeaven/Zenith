@@ -1,9 +1,12 @@
 package zenith.paint
 
-class NamedColor(val color: Color, name: String) {
+import javafx.beans.NamedArg
+
+class NamedColor(@NamedArg("color") val color: Color, @NamedArg("name") name: String) {
     companion object {
-        private val colors = HashMap<String, Color>()
-        fun get(name: String) = colors[name]
+        private val colors = mutableMapOf<String, Color>()
+
+        @JvmStatic fun valueOf(name: String) = colors[name]
     }
 
     init {

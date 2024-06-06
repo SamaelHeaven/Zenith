@@ -4,7 +4,7 @@ import javafx.beans.DefaultProperty
 import javafx.fxml.FXMLLoader
 
 @DefaultProperty("content")
-class MapNode<K, V> : HashMap<K, V>() {
+open class MapNode<K, V> : HashMap<K, V>() {
     var content: KeyValuePair<K, V>?
         get() = null
         set(content) {
@@ -14,7 +14,7 @@ class MapNode<K, V> : HashMap<K, V>() {
         }
 
     @Suppress("UNCHECKED_CAST")
-    override fun put(key: K, value: V): V? {
+    final override fun put(key: K, value: V): V? {
         val callerLevel = 3
         val stacktrace = Thread.currentThread().stackTrace
         if (stacktrace.size <= callerLevel) {

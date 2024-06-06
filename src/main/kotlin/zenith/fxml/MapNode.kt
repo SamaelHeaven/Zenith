@@ -13,4 +13,13 @@ open class MapNode<K, V> : HashMap<K, V>() {
                 super.put(content.key, content.value)
             }
         }
+
+    @Suppress("UNCHECKED_CAST")
+    final override fun put(key: K, value: V): V? {
+        if (!Reflection.getCallers().contains(FXMLLoader::class.java)) {
+            return super.put(key, value)
+        }
+        val keyValuePair = value as KeyValuePair<K, V>
+        return super.put(keyValuePair.key, keyValuePair.value)
+    }
 }

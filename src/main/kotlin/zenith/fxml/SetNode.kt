@@ -16,7 +16,7 @@ open class SetNode<E> : HashSet<E>() {
 
     @Suppress("UNCHECKED_CAST")
     final override fun add(element: E): Boolean {
-        val clazz = Reflection.getCallerClass(3) ?: return super.add(element)
+        val clazz = Reflection.getCaller(3) ?: return super.add(element)
         if (clazz.toString().split("$").firstOrNull() != FXMLLoader::class.java.toString()) {
             return super.add(element)
         }

@@ -18,7 +18,7 @@ class Gamepad private constructor(private val id: Int) {
     val downButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_downButtons)
     val upButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_upButtons)
     val releasedButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_releasedButtons)
-    val pressedButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_downButtons)
+    val pressedButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_pressedButtons)
     val axes: Map<GamepadAxis, Float> get() = Collections.unmodifiableMap(_axes)
 
     companion object {

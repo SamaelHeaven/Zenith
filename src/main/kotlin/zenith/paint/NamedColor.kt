@@ -6,7 +6,8 @@ class NamedColor(@NamedArg("color") val color: Color, @NamedArg("name") name: St
     companion object {
         private val colors = mutableMapOf<String, Color>()
 
-        @JvmStatic fun valueOf(name: String) = colors[name]
+        @JvmStatic
+        fun valueOf(name: String) = colors[name]
     }
 
     init {

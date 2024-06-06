@@ -1,7 +1,7 @@
 package zenith.core
 
 import javafx.scene.canvas.GraphicsContext
-import zenith.paint.Color
+import zenith.paint.Paint
 
 object Renderer {
     private val graphicsContext: GraphicsContext
@@ -11,8 +11,8 @@ object Renderer {
         graphicsContext = Game.fxCanvas.graphicsContext2D
     }
 
-    fun clearBackground(color: Color) {
-        graphicsContext.fill = color.fxPaint
+    fun clearBackground(paint: Paint) {
+        graphicsContext.fill = paint.fxPaint
         graphicsContext.fillRect(0.0, 0.0, Game.width.toDouble(), Game.height.toDouble())
     }
 }

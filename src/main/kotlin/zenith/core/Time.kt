@@ -11,20 +11,15 @@ object Time {
     private var frameCount = 0L
     private var _delta = 0f
     private var _averageFPS = 0f
+    val elapsed get() = (System.nanoTime() - launchTime).toDuration(DurationUnit.NANOSECONDS)
+    val delta get() = _delta
+    val fixedDelta get() = 1 / 60f
+    val averageFPS get() = _averageFPS
+    val currentFPS get() = if (delta <= 0f) 0f else 1 / delta
 
     init {
         Game.throwIfUninitialized()
     }
-
-    val elapsed get() = (System.nanoTime() - launchTime).toDuration(DurationUnit.NANOSECONDS)
-
-    val delta get() = _delta
-
-    val fixedDelta get() = 1 / 60f
-
-    val averageFPS get() = _averageFPS
-
-    val currentFPS get() = if (delta <= 0f) 0f else 1 / delta
 
     internal fun restart() {
         startTime = System.nanoTime()

@@ -55,16 +55,12 @@ class Texture {
 
     fun save(path: String, format: Format = Format.PNG) {
         val file = File(Path.format(path))
-        file.outputStream().use {
-            save(it, format)
-        }
+        file.outputStream().use { save(it, format) }
     }
 
     fun save(output: OutputStream, format: Format = Format.PNG) {
         ImageIO.write(SwingFXUtils.fromFXImage(fxImage, null), format.name.lowercase(Locale.ENGLISH), output)
     }
 
-    enum class Format {
-        GIF, PNG, JPG
-    }
+    enum class Format { GIF, PNG, JPG }
 }

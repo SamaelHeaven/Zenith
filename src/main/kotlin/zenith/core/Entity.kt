@@ -120,6 +120,10 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         return _components.iterator()
     }
 
+    override fun toString(): String {
+        return "{name: $name, tags: $tags}"
+    }
+
     inline fun <reified T> getComponent(): T? {
         return getComponent(T::class.java)
     }

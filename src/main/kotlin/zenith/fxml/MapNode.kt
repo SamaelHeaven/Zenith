@@ -16,7 +16,7 @@ open class MapNode<K, V> : HashMap<K, V>() {
 
     @Suppress("UNCHECKED_CAST")
     final override fun put(key: K, value: V): V? {
-        val clazz = Reflection.getCaller(3) ?: return super.put(key, value)
+        val clazz = Reflection.getCaller(4) ?: return super.put(key, value)
         if (clazz.toString().split("$").firstOrNull() != FXMLLoader::class.java.toString()) {
             return super.put(key, value)
         }

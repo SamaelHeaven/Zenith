@@ -19,6 +19,7 @@ object FXML {
     }
 
     fun <T> load(input: InputStream): T {
+        fxmlLoader.setRoot(null)
         return fxmlLoader.load(input)
     }
 }

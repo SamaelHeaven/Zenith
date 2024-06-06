@@ -13,6 +13,7 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import zenith.asset.Texture
+import zenith.input.Gamepad
 import zenith.input.Keyboard
 import zenith.input.Mouse
 import zenith.math.Vector2
@@ -199,6 +200,7 @@ object Game {
         var cleanup = false
         gameLoop = GameLoop {
             Time.update()
+            Gamepad.update()
             Keyboard.update()
             Mouse.update()
             if (cleanup) {

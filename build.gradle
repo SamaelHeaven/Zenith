@@ -14,6 +14,7 @@ repositories {
 }
 
 def javafxVersion = "21.0.3"
+def lwjglVersion = "3.3.3"
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
@@ -28,10 +29,18 @@ javafx {
     modules = ["javafx.controls", "javafx.fxml", "javafx.swing"]
 }
 
+dependencies {
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-stb"
+}
+
 publishing {
     publications {
         gpr(MavenPublication) {
-            artifactId="zenith"
+            artifactId = "zenith"
             from(components.java)
         }
     }

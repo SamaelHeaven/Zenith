@@ -6,10 +6,10 @@ import zenith.core.Reflection
 
 @DefaultProperty("content")
 open class MapNode<K, V> : HashMap<K, V>() {
-    var content: KeyValuePair<K, V>?
+    var content: PairNode<K, V>?
         get() = null
         set(content) {
-            if (content is KeyValuePair<*, *>) {
+            if (content is PairNode<*, *>) {
                 super.put(content.key, content.value)
             }
         }
@@ -31,7 +31,7 @@ open class MapNode<K, V> : HashMap<K, V>() {
             putAll(value as Map<K, V>)
             return null
         }
-        val keyValuePair = value as KeyValuePair<K, V>
-        return super.put(keyValuePair.key, keyValuePair.value)
+        val pairNode = value as PairNode<K, V>
+        return super.put(pairNode.key, pairNode.value)
     }
 }

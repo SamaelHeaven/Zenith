@@ -4,7 +4,7 @@ import javafx.beans.NamedArg
 import javafx.fxml.FXMLLoader
 import zenith.core.Reflection
 
-class KeyValuePair<K, V>(@NamedArg("key") key: K, @NamedArg("value") value: V) : Map.Entry<K, V> {
+class PairNode<K, V>(@NamedArg("key") key: K, @NamedArg("value") value: V) : Map.Entry<K, V> {
     override val key: K
     override val value: V
 

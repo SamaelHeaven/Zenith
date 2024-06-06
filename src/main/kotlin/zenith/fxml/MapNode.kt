@@ -27,6 +27,10 @@ open class MapNode<K, V> : HashMap<K, V>() {
         if (!Reflection.getCallers().contains(FXMLLoader::class.java)) {
             return super.put(key, value)
         }
+        if (value is Map<*, *>) {
+            putAll(value as Map<K, V>)
+            return null
+        }
         val keyValuePair = value as KeyValuePair<K, V>
         return super.put(keyValuePair.key, keyValuePair.value)
     }

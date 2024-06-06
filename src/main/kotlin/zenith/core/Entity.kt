@@ -9,7 +9,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     private val componentsToAdd = mutableListOf<Component>()
     private val componentsToRemove = mutableListOf<Component>()
     private var clean = false
-    val components: List<Component> get() = Collections.unmodifiableList(_components)
     val name: String
     val positionProperty = Property(Vector2.ZERO)
     val sizeProperty = Property(Vector2.ZERO)

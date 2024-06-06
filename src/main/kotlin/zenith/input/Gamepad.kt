@@ -6,13 +6,13 @@ import org.lwjgl.system.Configuration
 import zenith.core.Game
 import java.util.*
 
-class Gamepad private constructor(private val id: Int) {
+class Gamepad private constructor(val id: Int) {
     private val _downButtons = mutableSetOf<GamepadButton>()
     private val _upButtons = mutableSetOf<GamepadButton>()
     private val _releasedButtons = mutableSetOf<GamepadButton>()
     private val _pressedButtons = mutableSetOf<GamepadButton>()
     private val _axes = mutableMapOf<GamepadAxis, Float>()
-    private val previousPressedButtons = mutableSetOf<GamepadButton>()
+    private val previousDownButtons = mutableSetOf<GamepadButton>()
     val name get() = GLFW.glfwGetGamepadName(id) ?: "Unknown gamepad"
     val connected get() = GLFW.glfwJoystickPresent(id) && GLFW.glfwJoystickIsGamepad(id)
     val downButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_downButtons)
@@ -92,7 +92,7 @@ class Gamepad private constructor(private val id: Int) {
         updateUpButtons()
         updateReleasedButtons()
         updatePressedButtons()
-        updatePreviousPressedButtons()
+        updatePreviousDownButtons()
     }
 
     private fun updateDownButtons(state: GLFWGamepadState) {
@@ -112,25 +112,19 @@ class Gamepad private constructor(private val id: Int) {
 
     private fun updateReleasedButtons() {
         _releasedButtons.clear()
-        for (button in previousPressedButtons) {
-            if (!_downButtons.contains(button)) {
-                _releasedButtons.add(button)
-            }
-        }
+        _releasedButtons.addAll(_downButtons)
+        _releasedButtons.removeAll(previousDownButtons)
     }
 
     private fun updatePressedButtons() {
         _pressedButtons.clear()
-        for (button in _downButtons) {
-            if (!previousPressedButtons.contains(button)) {
-                _pressedButtons.add(button)
-            }
-        }
+        _pressedButtons.addAll(_downButtons)
+        _pressedButtons.removeAll(previousDownButtons)
     }
 
-    private fun updatePreviousPressedButtons() {
-        previousPressedButtons.clear()
-        previousPressedButtons.addAll(_downButtons)
+    private fun updatePreviousDownButtons() {
+        previousDownButtons.clear()
+        previousDownButtons.addAll(_downButtons)
     }
 
     private fun updateAxes(state: GLFWGamepadState) {
@@ -143,7 +137,7 @@ class Gamepad private constructor(private val id: Int) {
         _downButtons.clear()
         _releasedButtons.clear()
         _pressedButtons.clear()
-        previousPressedButtons.clear()
+        previousDownButtons.clear()
         updateUpButtons()
         for (axis in AXES) {
             if (_axes[axis] != 0f) {

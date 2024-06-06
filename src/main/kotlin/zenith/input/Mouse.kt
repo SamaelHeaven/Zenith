@@ -22,11 +22,11 @@ object Mouse {
     private val _releasedButtons = mutableSetOf<MouseButton>()
     private val _clickedButtons = mutableSetOf<MouseButton>()
     private val robot: Robot?
-    val downButtons get() = Collections.unmodifiableSet(_downButtons)
-    val upButtons get() = Collections.unmodifiableSet(_upButtons)
-    val pressedButtons get() = Collections.unmodifiableSet(_pressedButtons)
-    val releasedButtons get() = Collections.unmodifiableSet(_releasedButtons)
-    val clickedButtons get() = Collections.unmodifiableSet(_clickedButtons)
+    val downButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_downButtons)
+    val upButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_upButtons)
+    val pressedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_pressedButtons)
+    val releasedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_releasedButtons)
+    val clickedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_clickedButtons)
 
     var position: Vector2
         get() = _position

@@ -1,8 +1,6 @@
 package zenith.fxml
 
 import javafx.beans.DefaultProperty
-import javafx.fxml.FXMLLoader
-import zenith.core.Reflection
 
 @DefaultProperty("content")
 open class ListNode<E> : ArrayList<E>() {
@@ -13,18 +11,4 @@ open class ListNode<E> : ArrayList<E>() {
                 add(content)
             }
         }
-
-    @Suppress("UNCHECKED_CAST")
-    final override fun add(element: E): Boolean {
-        val clazz = Reflection.getCaller(3) ?: return super.add(element)
-        if (clazz.toString().split("$").firstOrNull() != FXMLLoader::class.java.toString()) {
-            return super.add(element)
-        }
-        val actualElement: E = if (element is List<*>) {
-            element.first() as E
-        } else {
-            element
-        }
-        return super.add(actualElement)
-    }
 }

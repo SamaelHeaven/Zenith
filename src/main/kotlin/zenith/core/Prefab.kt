@@ -1,11 +1,12 @@
 package zenith.core
 
+import zenith.fxml.ListNode
 import zenith.math.Vector2
 
-abstract class Prefab : EntityProvider {
+abstract class Prefab : ListNode<Component>(), EntityProvider {
     open var name = ""
     open var position = Vector2.ZERO
-    open var size = Vector2.ZERO
+    open var scale = Vector2.ZERO
     open var origin = Vector2.ZERO
     open var pivotPoint = Vector2.ZERO
     open var rotation = 0f
@@ -27,21 +28,21 @@ abstract class Prefab : EntityProvider {
         }
 
     var width: Float
-        get() = size.x
+        get() = scale.x
         set(value) {
-            size = Vector2(value, size.y)
+            scale = Vector2(value, scale.y)
         }
 
     var height: Float
-        get() = size.y
+        get() = scale.y
         set(value) {
-            size = Vector2(size.x, value)
+            scale = Vector2(scale.x, value)
         }
 
     abstract fun build(entity: Entity)
 
     final override fun provide(): Entity {
-        val entity = Entity(name, position, size, origin, pivotPoint, rotation, zIndex, disable, tags, components)
+        val entity = Entity(name, position, scale, origin, pivotPoint, rotation, zIndex, disable, tags, components)
         build(entity)
         return entity
     }

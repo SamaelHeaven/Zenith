@@ -5,7 +5,7 @@ import zenith.math.Vector2
 abstract class Component {
     private var _entity: Entity? = null
     protected open val positionProperty get() = entity!!.positionProperty
-    protected open val sizeProperty get() = entity!!.sizeProperty
+    protected open val scaleProperty get() = entity!!.scaleProperty
     protected open val originProperty get() = entity!!.originProperty
     protected open val pivotPointProperty get() = entity!!.pivotPointProperty
     protected open val rotationProperty get() = entity!!.rotationProperty
@@ -17,10 +17,10 @@ abstract class Component {
             entity!!.position = value
         }
 
-    protected open var size: Vector2
-        get() = entity!!.size
+    protected open var scale: Vector2
+        get() = entity!!.scale
         set(value) {
-            entity!!.size = value
+            entity!!.scale = value
         }
 
     protected open var origin: Vector2

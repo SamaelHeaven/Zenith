@@ -2,7 +2,6 @@ package zenith.core
 
 import javafx.beans.NamedArg
 import zenith.math.Vector2
-import java.util.*
 
 class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     private val _components = mutableListOf<Component>()
@@ -11,7 +10,7 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     private var clean = false
     val name: String
     val positionProperty = Property(Vector2.ZERO)
-    val sizeProperty = Property(Vector2.ZERO)
+    val scaleProperty = Property(Vector2.ZERO)
     val originProperty = Property(Vector2.ZERO)
     val pivotPointProperty = Property(Vector2.ZERO)
     val rotationProperty = Property(0f)
@@ -25,10 +24,10 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
             positionProperty.value = value
         }
 
-    var size: Vector2
-        get() = sizeProperty.value
+    var scale: Vector2
+        get() = scaleProperty.value
         set(value) {
-            sizeProperty.value = value
+            scaleProperty.value = value
         }
 
     var origin: Vector2
@@ -74,21 +73,21 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         }
 
     var width: Float
-        get() = size.x
+        get() = scale.x
         set(value) {
-            size = Vector2(value, size.y)
+            scale = Vector2(value, scale.y)
         }
 
     var height: Float
-        get() = size.y
+        get() = scale.y
         set(value) {
-            size = Vector2(size.x, value)
+            scale = Vector2(scale.x, value)
         }
 
     constructor(
         @NamedArg("name") name: String = "",
         @NamedArg("position") position: Vector2 = Vector2.ZERO,
-        @NamedArg("size") size: Vector2 = Vector2.ZERO,
+        @NamedArg("scale") scale: Vector2 = Vector2.ZERO,
         @NamedArg("origin") origin: Vector2 = Vector2.ZERO,
         @NamedArg("pivotPoint") pivotPoint: Vector2 = Vector2.ZERO,
         @NamedArg("rotation") rotation: Float = 0f,
@@ -100,7 +99,7 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         this.name = name
         this.tags.addAll(tags)
         this.position = position
-        this.size = size
+        this.scale = scale
         this.origin = origin
         this.pivotPoint = pivotPoint
         this.rotation = rotation

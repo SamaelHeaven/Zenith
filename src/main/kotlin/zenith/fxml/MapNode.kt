@@ -6,7 +6,7 @@ import zenith.core.Reflection
 
 @DefaultProperty("content")
 open class MapNode<K, V> : HashMap<K, V>() {
-    open var content: KeyValuePair<K, V>?
+    var content: KeyValuePair<K, V>?
         get() = null
         set(content) {
             if (content is KeyValuePair<*, *>) {
@@ -14,8 +14,16 @@ open class MapNode<K, V> : HashMap<K, V>() {
             }
         }
 
+    var contents: Map<K, V>?
+        get() = null
+        set(contents) {
+            if (contents != null) {
+                putAll(contents)
+            }
+        }
+
     @Suppress("UNCHECKED_CAST")
-    override fun put(key: K, value: V): V? {
+    final override fun put(key: K, value: V): V? {
         if (!Reflection.getCallers().contains(FXMLLoader::class.java)) {
             return super.put(key, value)
         }

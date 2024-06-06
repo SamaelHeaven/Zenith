@@ -12,13 +12,13 @@ object FXML {
 
     fun <T> load(url: URL, controller: Any? = null): T {
         url.openStream().use {
-            return load(it, controller)
+            return load(it, controller, url)
         }
     }
 
-    fun <T> load(input: InputStream, controller: Any? = null): T {
+    fun <T> load(input: InputStream, controller: Any? = null, location: URL? = null): T {
         val fxmlLoader = FXMLLoader()
-        fxmlLoader.setRoot(null)
+        location?.let { fxmlLoader.location = it }
         controller?.let { fxmlLoader.setController(controller) }
         return fxmlLoader.load(input)
     }

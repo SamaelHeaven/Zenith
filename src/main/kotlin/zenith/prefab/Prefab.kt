@@ -4,6 +4,7 @@ import zenith.core.Component
 import zenith.core.Entity
 import zenith.core.EntityProvider
 import zenith.fxml.ListNode
+import zenith.fxml.StringSetNode
 import zenith.math.Vector2
 
 abstract class Prefab : ListNode<Component>(), EntityProvider {
@@ -15,7 +16,7 @@ abstract class Prefab : ListNode<Component>(), EntityProvider {
     open var rotation = 0f
     open var zIndex = 0
     open var disable = false
-    open var tags: Set<String> = setOf()
+    open var tags: StringSetNode = StringSetNode()
     open var components: Iterable<Component> = listOf()
 
     var x: Float

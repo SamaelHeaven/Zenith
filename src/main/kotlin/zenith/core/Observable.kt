@@ -5,7 +5,7 @@ import javafx.beans.NamedArg
 class Observable<T>(@NamedArg("value") initialValue: T) {
     private var _value: T = initialValue
     private var notifying = false
-    private val listeners = HashSet<Listener<T>>()
+    private val listeners = mutableSetOf<Listener<T>>()
     private val listenersToAdd = mutableListOf<Listener<T>>()
     private val listenersToRemove = mutableListOf<Listener<T>>()
     private var boundObservable: Observable<T>? = null

@@ -52,6 +52,12 @@ class Audio(
 
     fun play() {
         cleanClips()
+        if (state == State.PAUSED) {
+            for (clip in clips) {
+                clip.play()
+            }
+            return
+        }
         val clip = Clip(inputStreamBuffer, _volume, loop)
         globalClips.add(clip)
         clips.add(clip)

@@ -112,8 +112,8 @@ class Gamepad private constructor(val id: Int) {
 
     private fun updateReleasedButtons() {
         _releasedButtons.clear()
-        _releasedButtons.addAll(_downButtons)
-        _releasedButtons.removeAll(previousDownButtons)
+        _releasedButtons.addAll(previousDownButtons)
+        _releasedButtons.removeAll(_downButtons)
     }
 
     private fun updatePressedButtons() {

@@ -65,8 +65,6 @@ class Property<T>(@NamedArg("value") initialValue: T) {
     }
 
     fun bindBidirectional(other: Property<T>) {
-        boundProperty?.let { unbind() }
-        other.boundProperty?.let { other.unbind() }
         bidirectionalBinding?.let { unbindBidirectional() }
         other.bidirectionalBinding?.let { other.unbindBidirectional() }
         val binding = BidirectionalBinding(this, other)

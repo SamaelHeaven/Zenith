@@ -9,6 +9,7 @@ import org.lwjgl.openal.ALC11
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.libc.LibCStdlib
+import zenith.core.Property
 import zenith.io.ByteBufferUtils
 import zenith.io.Resource
 import java.io.InputStream
@@ -28,16 +29,20 @@ class Audio(
     private val inputStreamBuffer = ByteBufferUtils.fromInputStream(input)
     private val clips = mutableListOf<Clip>()
     private val disposedClips = mutableListOf<Clip>()
-    private var _volume = clampVolume(volume)
+
+    val volumeProperty = Property(clampVolume(volume)) {
+        cleanClips()
+        val newVolume = clampVolume(it)
+        for (clip in clips) {
+            clip.changeVolume(newVolume)
+        }
+        return@Property newVolume
+    }
 
     var volume: Float
-        get() = _volume
+        get() = volumeProperty.value
         set(value) {
-            cleanClips()
-            this._volume = clampVolume(value)
-            for (clip in clips) {
-                clip.changeVolume(this._volume)
-            }
+            volumeProperty.value = value
         }
 
     companion object {
@@ -49,19 +54,22 @@ class Audio(
         private val globalClips = mutableListOf<Clip>()
         private var audioContext = MemoryUtil.NULL
         private var audioDevice = MemoryUtil.NULL
-        private var _volume = 1f
+
+        val volumeProperty = Property(1f) {
+            val newVolume = clampVolume(it)
+            if (volume == newVolume) {
+                return@Property newVolume
+            }
+            for (clip in globalClips.toTypedArray()) {
+                clip.changeVolume(clip.volume, newVolume)
+            }
+            return@Property newVolume
+        }
 
         var volume: Float
-            get() = _volume
+            get() = volumeProperty.value
             set(value) {
-                val newVolume = clampVolume(value)
-                if (_volume == newVolume) {
-                    return
-                }
-                _volume = newVolume
-                for (clip in globalClips.toTypedArray()) {
-                    clip.changeVolume(clip.volume)
-                }
+                volumeProperty.value = value
             }
 
         init {
@@ -120,7 +128,7 @@ class Audio(
             }
             return
         }
-        val clip = Clip(inputStreamBuffer, _volume, loop)
+        val clip = Clip(inputStreamBuffer, volume, loop)
         globalClips.add(clip)
         clips.add(clip)
         clip.play()
@@ -202,7 +210,7 @@ class Audio(
             AL11.alSourcei(sourceId, AL11.AL_BUFFER, bufferId)
             AL11.alSourcei(sourceId, AL11.AL_LOOPING, if (loop) 1 else 0)
             AL11.alSourcei(sourceId, AL11.AL_POSITION, 0)
-            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * _volume)
+            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * volumeProperty.value)
             LibCStdlib.free(rawAudioBuffer)
         }
 
@@ -218,9 +226,9 @@ class Audio(
             AL11.alSourceStop(sourceId)
         }
 
-        fun changeVolume(volume: Float) {
+        fun changeVolume(volume: Float, globalVolume: Float = volumeProperty.value) {
             this.volume = volume
-            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * _volume)
+            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * globalVolume)
         }
 
         fun dispose() {

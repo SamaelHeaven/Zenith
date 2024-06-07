@@ -12,7 +12,7 @@ open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
     final override var value: T
         get() = objectProperty.get()
         set(value) {
-            objectProperty.set(value)
+            set(value)
         }
 
     final override fun addListener(listener: Listener<T>) {

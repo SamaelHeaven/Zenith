@@ -40,6 +40,68 @@ class Audio(
             }
         }
 
+    companion object {
+        private val executor: ExecutorService = Executors.newCachedThreadPool {
+            val thread = Thread(it)
+            thread.isDaemon = true
+            thread
+        }
+        private val globalClips = mutableListOf<Clip>()
+        private var audioContext = MemoryUtil.NULL
+        private var audioDevice = MemoryUtil.NULL
+        private var _volume = 1f
+
+        var volume: Float
+            get() = _volume
+            set(value) {
+                val newVolume = clampVolume(value)
+                if (_volume == newVolume) {
+                    return
+                }
+                _volume = newVolume
+                for (clip in globalClips.toTypedArray()) {
+                    clip.changeVolume(clip.volume)
+                }
+            }
+
+        init {
+            initializeOpenAL()
+        }
+
+        private fun initializeOpenAL() {
+            openDevice()
+            createContext()
+            createCapabilities()
+            Runtime.getRuntime().addShutdownHook(Thread { disposeOpenAL() })
+        }
+
+        private fun openDevice() {
+            audioDevice = ALC11.alcOpenDevice(ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER))
+        }
+
+        private fun createContext() {
+            audioContext = ALC11.alcCreateContext(audioDevice, intArrayOf(0))
+            ALC11.alcMakeContextCurrent(audioContext)
+        }
+
+        private fun createCapabilities() {
+            val alcCapabilities = ALC.createCapabilities(audioDevice)
+            val alCapabilities = AL.createCapabilities(alcCapabilities)
+            if (!alCapabilities.OpenAL11) {
+                throw RuntimeException("Could not create OpenAL capabilities")
+            }
+        }
+
+        private fun disposeOpenAL() {
+            ALC11.alcDestroyContext(audioContext)
+            ALC11.alcCloseDevice(audioDevice)
+        }
+
+        private fun clampVolume(volume: Float): Float {
+            return max(0.0, min(1.0, volume.toDouble())).toFloat()
+        }
+    }
+
     constructor(
         @NamedArg("url") url: URL, @NamedArg("volume") volume: Float = 1f, @NamedArg("loop") loop: Boolean = false
     ) : this(url.openStream(), volume, loop)
@@ -173,68 +235,6 @@ class Audio(
                 return AL11.AL_FORMAT_STEREO16
             }
             return -1
-        }
-    }
-
-    companion object {
-        private val executor: ExecutorService = Executors.newCachedThreadPool {
-            val thread = Thread(it)
-            thread.isDaemon = true
-            thread
-        }
-        private val globalClips = mutableListOf<Clip>()
-        private var audioContext = MemoryUtil.NULL
-        private var audioDevice = MemoryUtil.NULL
-        private var _volume = 1f
-
-        var volume: Float
-            get() = _volume
-            set(value) {
-                val newVolume = clampVolume(value)
-                if (_volume == newVolume) {
-                    return
-                }
-                _volume = newVolume
-                for (clip in globalClips.toTypedArray()) {
-                    clip.changeVolume(clip.volume)
-                }
-            }
-
-        init {
-            initializeOpenAL()
-        }
-
-        private fun initializeOpenAL() {
-            openDevice()
-            createContext()
-            createCapabilities()
-            Runtime.getRuntime().addShutdownHook(Thread { disposeOpenAL() })
-        }
-
-        private fun openDevice() {
-            audioDevice = ALC11.alcOpenDevice(ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER))
-        }
-
-        private fun createContext() {
-            audioContext = ALC11.alcCreateContext(audioDevice, intArrayOf(0))
-            ALC11.alcMakeContextCurrent(audioContext)
-        }
-
-        private fun createCapabilities() {
-            val alcCapabilities = ALC.createCapabilities(audioDevice)
-            val alCapabilities = AL.createCapabilities(alcCapabilities)
-            if (!alCapabilities.OpenAL11) {
-                throw RuntimeException("Could not create OpenAL capabilities")
-            }
-        }
-
-        private fun disposeOpenAL() {
-            ALC11.alcDestroyContext(audioContext)
-            ALC11.alcCloseDevice(audioDevice)
-        }
-
-        private fun clampVolume(volume: Float): Float {
-            return max(0.0, min(1.0, volume.toDouble())).toFloat()
         }
     }
 }

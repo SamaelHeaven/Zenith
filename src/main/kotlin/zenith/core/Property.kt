@@ -1,104 +1,50 @@
 package zenith.core
 
 import javafx.beans.NamedArg
+import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.value.ChangeListener
 
-class Property<T>(@NamedArg("value") initialValue: T) {
-    private var _value: T = initialValue
-    private var notifying = false
-    private val listeners = mutableSetOf<Listener<T>>()
-    private val listenersToAdd = mutableListOf<Listener<T>>()
-    private val listenersToRemove = mutableListOf<Listener<T>>()
-    private var boundProperty: Property<T>? = null
-    private var boundListener: Listener<T>? = null
-    private var bidirectionalBinding: BidirectionalBinding<T>? = null
+class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
+    override val objectProperty = SimpleObjectProperty(initialValue)
+    private val listeners = mutableMapOf<Listener<T>, ChangeListener<T>>()
 
-    var value: T
-        get() = _value
+    override var value: T
+        get() = objectProperty.get()
         set(value) {
-            if (_value == value) {
-                return
-            }
-            val oldValue = _value
-            _value = value
-            notifying = true
-            try {
-                for (listener in listeners) {
-                    listener.onChange(oldValue, _value)
-                }
-            } finally {
-                notifying = false
-                listeners.addAll(listenersToAdd)
-                listeners.removeAll(listenersToRemove.toSet())
-                listenersToAdd.clear()
-                listenersToRemove.clear()
-            }
+            objectProperty.set(value)
         }
 
-    fun addListener(listener: Listener<T>) {
-        if (notifying) {
-            listenersToAdd.add(listener)
-            return
-        }
-        listeners.add(listener)
+    override fun addListener(listener: Listener<T>) {
+        val changeListener = ChangeListener { _, oldValue, newValue -> listener.onChange(oldValue, newValue) }
+        listeners[listener] = changeListener
+        objectProperty.addListener(changeListener)
     }
 
-    fun removeListener(listener: Listener<T>) {
-        if (notifying) {
-            listenersToRemove.add(listener)
-            return
+    override fun removeListener(listener: Listener<T>) {
+        val foundListener = listeners[listener]
+        foundListener?.let {
+            objectProperty.removeListener(it)
+            listeners.remove(listener)
         }
-        listeners.remove(listener)
     }
 
-    fun bind(property: Property<T>) {
-        boundProperty?.let { unbind() }
-        boundProperty = property
-        val listener = Listener<T> { _, newValue -> value = newValue }
-        property.addListener(listener)
-        boundListener = listener
-        this.value = property.value
+    fun toReadOnly(): ReadOnlyProperty<T> {
+        return ReadOnlyProperty(this)
+    }
+
+    fun bind(property: Observable<T>) {
+        objectProperty.bind(property.objectProperty)
     }
 
     fun unbind() {
-        boundProperty?.removeListener(boundListener!!)
-        boundProperty = null
+        objectProperty.unbind()
     }
 
-    fun bindBidirectional(other: Property<T>) {
-        bidirectionalBinding?.let { unbindBidirectional() }
-        other.bidirectionalBinding?.let { other.unbindBidirectional() }
-        val binding = BidirectionalBinding(this, other)
-        this.bidirectionalBinding = binding
-        other.bidirectionalBinding = binding
+    fun bindBidirectional(property: Property<T>) {
+        objectProperty.bindBidirectional(property.objectProperty)
     }
 
-    fun unbindBidirectional() {
-        bidirectionalBinding?.unbind()
-        bidirectionalBinding = null
-    }
-
-    private class BidirectionalBinding<T>(val property1: Property<T>, val property2: Property<T>) {
-        private val listener1 = Listener<T> { _, newValue ->
-            if (property2.value != newValue) {
-                property2.value = newValue
-            }
-        }
-
-        private val listener2 = Listener<T> { _, newValue ->
-            if (property1.value != newValue) {
-                property1.value = newValue
-            }
-        }
-
-        init {
-            property1.addListener(listener1)
-            property2.addListener(listener2)
-            property1.value = property2.value
-        }
-
-        fun unbind() {
-            property1.removeListener(listener1)
-            property2.removeListener(listener2)
-        }
+    fun unbindBidirectional(property: Property<T>) {
+        objectProperty.unbindBidirectional(property.objectProperty)
     }
 }

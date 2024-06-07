@@ -9,55 +9,55 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     private val componentsToRemove = mutableListOf<Component>()
     private var clean = false
     val name: String
-    val positionProperty = Property(Vector2.ZERO)
-    val scaleProperty = Property(Vector2.ZERO)
-    val originProperty = Property(Vector2.ZERO)
-    val pivotPointProperty = Property(Vector2.ZERO)
-    val rotationProperty = Property(0f)
-    val zIndexProperty = Property(0)
-    val disableProperty = Property(false)
+    val positionObservable = Observable(Vector2.ZERO)
+    val scaleObservable = Observable(Vector2.ZERO)
+    val originObservable = Observable(Vector2.ZERO)
+    val pivotPointObservable = Observable(Vector2.ZERO)
+    val rotationObservable = Observable(0f)
+    val zIndexObservable = Observable(0)
+    val disableObservable = Observable(false)
     val tags = mutableSetOf<String>()
 
     var position: Vector2
-        get() = positionProperty.value
+        get() = positionObservable.value
         set(value) {
-            positionProperty.value = value
+            positionObservable.value = value
         }
 
     var scale: Vector2
-        get() = scaleProperty.value
+        get() = scaleObservable.value
         set(value) {
-            scaleProperty.value = value
+            scaleObservable.value = value
         }
 
     var origin: Vector2
-        get() = originProperty.value
+        get() = originObservable.value
         set(value) {
-            originProperty.value = value
+            originObservable.value = value
         }
 
     var pivotPoint: Vector2
-        get() = pivotPointProperty.value
+        get() = pivotPointObservable.value
         set(value) {
-            pivotPointProperty.value = value
+            pivotPointObservable.value = value
         }
 
     var rotation: Float
-        get() = rotationProperty.value
+        get() = rotationObservable.value
         set(value) {
-            rotationProperty.value = value
+            rotationObservable.value = value
         }
 
     var zIndex: Int
-        get() = zIndexProperty.value
+        get() = zIndexObservable.value
         set(value) {
-            zIndexProperty.value = value
+            zIndexObservable.value = value
         }
 
     var disable: Boolean
-        get() = disableProperty.value
+        get() = disableObservable.value
         set(value) {
-            disableProperty.value = value
+            disableObservable.value = value
         }
 
     var x: Float

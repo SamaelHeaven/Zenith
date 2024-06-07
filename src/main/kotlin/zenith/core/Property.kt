@@ -1,31 +1,36 @@
 package zenith.core
 
 import javafx.beans.NamedArg
+import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ChangeListener
 
-class Property<T>(@NamedArg("value") initialValue: T, private inline val setter: (value: T) -> T = { it }) : Observable<T>() {
+open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
     private val listeners = mutableMapOf<Listener<T>, ChangeListener<T>>()
-    override val objectProperty = SimpleObjectProperty(initialValue)
+    final override val objectProperty: ObjectProperty<T> = ObservableProperty<T>(initialValue) { set(it) }
 
-    override var value: T
+    final override var value: T
         get() = objectProperty.get()
         set(value) {
-            objectProperty.set(setter(value))
+            objectProperty.set(value)
         }
 
-    override fun addListener(listener: Listener<T>) {
+    final override fun addListener(listener: Listener<T>) {
         val changeListener = ChangeListener { _, oldValue, newValue -> listener.onChange(oldValue, newValue) }
         listeners[listener] = changeListener
         objectProperty.addListener(changeListener)
     }
 
-    override fun removeListener(listener: Listener<T>) {
+    final override fun removeListener(listener: Listener<T>) {
         val foundListener = listeners[listener]
         foundListener?.let {
             objectProperty.removeListener(it)
             listeners.remove(listener)
         }
+    }
+
+    protected open fun set(value: T) {
+        return objectProperty.set(value)
     }
 
     fun toReadOnly(): ReadOnlyProperty<T> {
@@ -46,5 +51,11 @@ class Property<T>(@NamedArg("value") initialValue: T, private inline val setter:
 
     fun unbindBidirectional(property: Property<T>) {
         objectProperty.unbindBidirectional(property.objectProperty)
+    }
+
+    private class ObservableProperty<T>(value: T, private inline val setter: (value: T) -> Unit) : SimpleObjectProperty<T>(value) {
+        override fun set(value: T) {
+            setter(value)
+        }
     }
 }

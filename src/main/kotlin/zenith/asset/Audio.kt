@@ -30,13 +30,18 @@ class Audio(
     private val clips = mutableListOf<Clip>()
     private val disposedClips = mutableListOf<Clip>()
 
-    val volumeProperty = Property(clampVolume(volume)) {
-        cleanClips()
-        val newVolume = clampVolume(it)
-        for (clip in clips) {
-            clip.changeVolume(newVolume)
+    val volumeProperty = object : Property<Float>(volume) {
+        override fun set(value: Float) {
+            cleanClips()
+            val newValue = clampVolume(value)
+            if (newValue == this.value) {
+                return
+            }
+            super.set(newValue)
+            for (clip in clips) {
+                clip.changeVolume(newValue)
+            }
         }
-        return@Property newVolume
     }
 
     var volume: Float
@@ -55,15 +60,17 @@ class Audio(
         private var audioContext = MemoryUtil.NULL
         private var audioDevice = MemoryUtil.NULL
 
-        val volumeProperty = Property(1f) {
-            val newVolume = clampVolume(it)
-            if (volume == newVolume) {
-                return@Property newVolume
+        val volumeProperty = object : Property<Float>(1f) {
+            override fun set(value: Float) {
+                val newValue = clampVolume(value)
+                if (newValue == this.value) {
+                    return
+                }
+                super.set(newValue)
+                for (clip in globalClips.toTypedArray()) {
+                    clip.changeVolume(clip.volume)
+                }
             }
-            for (clip in globalClips.toTypedArray()) {
-                clip.changeVolume(clip.volume, newVolume)
-            }
-            return@Property newVolume
         }
 
         var volume: Float
@@ -226,9 +233,9 @@ class Audio(
             AL11.alSourceStop(sourceId)
         }
 
-        fun changeVolume(volume: Float, globalVolume: Float = volumeProperty.value) {
+        fun changeVolume(volume: Float) {
             this.volume = volume
-            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * globalVolume)
+            AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * volumeProperty.value)
         }
 
         fun dispose() {

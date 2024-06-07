@@ -22,7 +22,6 @@ class Gamepad private constructor(val id: Int) {
     val axes: Map<GamepadAxis, Float> get() = Collections.unmodifiableMap(_axes)
 
     companion object {
-        private val AXES = GamepadAxis.entries
         private val _gamepads = mutableListOf<Gamepad>()
         val gamepads: List<Gamepad> get() = Collections.unmodifiableList(_gamepads)
 
@@ -30,6 +29,10 @@ class Gamepad private constructor(val id: Int) {
             Game.throwIfUninitialized()
             initializeGLFW()
             initializeGamepads()
+        }
+
+        operator fun get(index: Int): Gamepad {
+            return _gamepads[index]
         }
 
         internal fun update() {
@@ -84,10 +87,10 @@ class Gamepad private constructor(val id: Int) {
             reset()
             return
         }
-        GLFWGamepadState.malloc().use { state ->
-            GLFW.glfwGetGamepadState(id, state)
-            updateDownButtons(state)
-            updateAxes(state)
+        GLFWGamepadState.malloc().use {
+            GLFW.glfwGetGamepadState(id, it)
+            updateDownButtons(it)
+            updateAxes(it)
         }
         updateUpButtons()
         updateReleasedButtons()
@@ -139,7 +142,7 @@ class Gamepad private constructor(val id: Int) {
         _pressedButtons.clear()
         previousDownButtons.clear()
         updateUpButtons()
-        for (axis in AXES) {
+        for (axis in GamepadAxis.entries) {
             if (_axes[axis] != 0f) {
                 _axes[axis] = 0f
             }

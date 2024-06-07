@@ -3,11 +3,11 @@ package zenith.core
 import zenith.math.Vector2
 
 class Camera {
-    val positionObservable = Observable(Vector2.ZERO)
+    val positionProperty = Property(Vector2.ZERO)
 
     var position: Vector2
-        get() = positionObservable.value
+        get() = positionProperty.value
         set(value) {
-            positionObservable.value = value
+            positionProperty.value = value
         }
 }

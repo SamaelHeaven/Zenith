@@ -19,25 +19,25 @@ abstract class Prefab : ListNode<Component>(), EntityProvider {
     open var tags: StringSetNode = StringSetNode()
     open var components: Iterable<Component> = listOf()
 
-    var x: Float
+    open var x: Float
         get() = position.x
         set(value) {
             position = Vector2(value, position.y)
         }
 
-    var y: Float
+    open var y: Float
         get() = position.y
         set(value) {
             position = Vector2(position.x, value)
         }
 
-    var width: Float
+    open var width: Float
         get() = scale.x
         set(value) {
             scale = Vector2(value, scale.y)
         }
 
-    var height: Float
+    open var height: Float
         get() = scale.y
         set(value) {
             scale = Vector2(scale.x, value)

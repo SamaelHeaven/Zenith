@@ -52,7 +52,7 @@ class Audio(
 
     fun play() {
         cleanClips()
-        if (state == State.PAUSED) {
+        if (state == AudioState.PAUSED) {
             for (clip in clips) {
                 clip.play()
             }
@@ -68,7 +68,7 @@ class Audio(
     fun pause() {
         cleanClips()
         for (clip in clips) {
-            if (clip.state == State.PLAYING) {
+            if (clip.state == AudioState.PLAYING) {
                 clip.pause()
             }
         }
@@ -77,25 +77,25 @@ class Audio(
     fun stop() {
         cleanClips()
         for (clip in clips) {
-            if (clip.state == State.PLAYING) {
+            if (clip.state == AudioState.PLAYING) {
                 clip.stop()
             }
         }
         clips.clear()
     }
 
-    val state: State
+    val state: AudioState
         get() {
             cleanClips()
             for (clip in clips) {
-                if (clip.state == State.PLAYING) {
-                    return State.PLAYING
+                if (clip.state == AudioState.PAUSED) {
+                    return AudioState.PAUSED
                 }
-                if (clip.state == State.PAUSED) {
-                    return State.PAUSED
+                if (clip.state == AudioState.PLAYING) {
+                    return AudioState.PLAYING
                 }
             }
-            return State.STOPPED
+            return AudioState.STOPPED
         }
 
     private fun cleanClips() {
@@ -106,7 +106,7 @@ class Audio(
 
     private fun addDisposeClipListener(clip: Clip) {
         executor.submit {
-            while (clip.state != State.STOPPED) {
+            while (clip.state != AudioState.STOPPED) {
                 TimeUnit.SECONDS.sleep(1)
             }
             clip.dispose()
@@ -115,24 +115,18 @@ class Audio(
         }
     }
 
-    enum class State {
-        PLAYING, PAUSED, STOPPED
-    }
-
     private class Clip(inputStreamBuffer: ByteBuffer, var volume: Float, loop: Boolean) {
         private val sourceId: Int
         private val bufferId: Int
 
-        val state: State
+        val state: AudioState
             get() {
                 val state = AL11.alGetSourcei(sourceId, AL11.AL_SOURCE_STATE)
-                if (state == AL11.AL_PLAYING) {
-                    return State.PLAYING
+                return when (state) {
+                    AL11.AL_PLAYING -> AudioState.PLAYING
+                    AL11.AL_PAUSED -> AudioState.PAUSED
+                    else -> AudioState.STOPPED
                 }
-                if (state == AL11.AL_PAUSED) {
-                    return State.PAUSED
-                }
-                return State.STOPPED
             }
 
         init {

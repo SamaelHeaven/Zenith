@@ -18,7 +18,7 @@ enum class InputAxis {
     abstract fun get(): Int
 
     companion object {
-        val both: Vector2 get() = Vector2(HORIZONTAL.get(), VERTICAL.get())
+        val both get() = Vector2(HORIZONTAL.get(), VERTICAL.get())
 
         fun get(minusKey: Key, minusKeyAlt: Key, plusKey: Key, plusKeyAlt: Key, gamepadAxis: GamepadAxis): Int {
             val axis = Gamepad.first().getAxis(gamepadAxis).roundToInt()

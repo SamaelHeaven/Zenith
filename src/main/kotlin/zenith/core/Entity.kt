@@ -11,16 +11,17 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     val name: String
     val positionProperty = Property(Vector2.ZERO)
     val scaleProperty = Property(Vector2.ZERO)
-    val originProperty = object : Property<Vector2>(Vector2.ZERO) {
-        override fun set(value: Vector2) {
-            super.set(value.clamp(-1, 1))
-        }
-    }
     val pivotPointProperty = Property(Vector2.ZERO)
     val rotationProperty = Property(0f)
     val zIndexProperty = Property(0)
     val disableProperty = Property(false)
     val tags = mutableSetOf<String>()
+
+    val originProperty = object : Property<Vector2>(Vector2.ZERO) {
+        override fun set(value: Vector2) {
+            super.set(value.clamp(-1, 1))
+        }
+    }
 
     var position: Vector2
         get() = positionProperty.value

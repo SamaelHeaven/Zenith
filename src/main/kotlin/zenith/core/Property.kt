@@ -4,7 +4,7 @@ import javafx.beans.NamedArg
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.value.ChangeListener
 
-class Property<T>(@NamedArg("value") initialValue: T, private val setter: (value: T) -> T = { it }) : Observable<T>() {
+class Property<T>(@NamedArg("value") initialValue: T, private inline val setter: (value: T) -> T = { it }) : Observable<T>() {
     private val listeners = mutableMapOf<Listener<T>, ChangeListener<T>>()
     override val objectProperty = SimpleObjectProperty(initialValue)
 

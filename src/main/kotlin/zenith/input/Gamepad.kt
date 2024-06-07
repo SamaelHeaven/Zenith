@@ -21,9 +21,8 @@ class Gamepad private constructor(val id: Int) {
     val pressedButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_pressedButtons)
     val axes: Map<GamepadAxis, Float> get() = Collections.unmodifiableMap(_axes)
 
-    companion object {
-        private val _gamepads = mutableListOf<Gamepad>()
-        val gamepads: List<Gamepad> get() = Collections.unmodifiableList(_gamepads)
+    companion object : Iterable<Gamepad> {
+        private val gamepads = mutableListOf<Gamepad>()
 
         init {
             Game.throwIfUninitialized()
@@ -32,11 +31,15 @@ class Gamepad private constructor(val id: Int) {
         }
 
         operator fun get(index: Int): Gamepad {
-            return _gamepads[index]
+            return gamepads[index]
+        }
+
+        override fun iterator(): Iterator<Gamepad> {
+            return gamepads.iterator()
         }
 
         internal fun update() {
-            for (gamepad in _gamepads) {
+            for (gamepad in gamepads) {
                 gamepad.update()
             }
         }
@@ -51,7 +54,7 @@ class Gamepad private constructor(val id: Int) {
 
         private fun initializeGamepads() {
             for (i in GLFW.GLFW_JOYSTICK_1..GLFW.GLFW_JOYSTICK_LAST) {
-                _gamepads.add(Gamepad(i))
+                gamepads.add(Gamepad(i))
             }
         }
     }

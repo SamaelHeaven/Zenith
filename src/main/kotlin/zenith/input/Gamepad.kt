@@ -26,8 +26,14 @@ class Gamepad private constructor(val id: Int) {
 
         init {
             Game.throwIfUninitialized()
-            initializeGLFW()
-            initializeGamepads()
+            Configuration.GLFW_CHECK_THREAD0.set(false)
+            if (!GLFW.glfwInit()) {
+                throw RuntimeException("Could not initialize GLFW")
+            }
+            Runtime.getRuntime().addShutdownHook(Thread { GLFW.glfwTerminate() })
+            for (i in GLFW.GLFW_JOYSTICK_1..GLFW.GLFW_JOYSTICK_LAST) {
+                gamepads.add(Gamepad(i))
+            }
         }
 
         operator fun get(index: Int): Gamepad {
@@ -41,20 +47,6 @@ class Gamepad private constructor(val id: Int) {
         internal fun update() {
             for (gamepad in gamepads) {
                 gamepad.update()
-            }
-        }
-
-        private fun initializeGLFW() {
-            Configuration.GLFW_CHECK_THREAD0.set(false)
-            if (!GLFW.glfwInit()) {
-                throw RuntimeException("Could not initialize GLFW")
-            }
-            Runtime.getRuntime().addShutdownHook(Thread { GLFW.glfwTerminate() })
-        }
-
-        private fun initializeGamepads() {
-            for (i in GLFW.GLFW_JOYSTICK_1..GLFW.GLFW_JOYSTICK_LAST) {
-                gamepads.add(Gamepad(i))
             }
         }
     }

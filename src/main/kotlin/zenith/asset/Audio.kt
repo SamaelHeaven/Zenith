@@ -200,7 +200,7 @@ class Audio(
             AL11.alBufferData(bufferId, format, rawAudioBuffer!!, sampleRateBuffer[0])
             sourceId = AL11.alGenSources()
             AL11.alSourcei(sourceId, AL11.AL_BUFFER, bufferId)
-            AL11.alSourcei(sourceId, AL11.AL_LOOPING, (if (loop) 1 else 0))
+            AL11.alSourcei(sourceId, AL11.AL_LOOPING, if (loop) 1 else 0)
             AL11.alSourcei(sourceId, AL11.AL_POSITION, 0)
             AL11.alSourcef(sourceId, AL11.AL_GAIN, volume * _volume)
             LibCStdlib.free(rawAudioBuffer)
@@ -229,12 +229,11 @@ class Audio(
         }
 
         private fun getFormat(channels: Int): Int {
-            if (channels == 1) {
-                return AL11.AL_FORMAT_MONO16
-            } else if (channels == 2) {
-                return AL11.AL_FORMAT_STEREO16
+            return when (channels) {
+                1 -> AL11.AL_FORMAT_MONO16
+                2 -> AL11.AL_FORMAT_STEREO16
+                else -> -1
             }
-            return -1
         }
     }
 }

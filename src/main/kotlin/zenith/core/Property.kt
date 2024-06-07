@@ -12,7 +12,7 @@ open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
     final override var value: T
         get() = objectProperty.get()
         set(value) {
-            set(value)
+            objectProperty.set(value)
         }
 
     final override fun addListener(listener: Listener<T>) {
@@ -30,7 +30,7 @@ open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
     }
 
     protected open fun set(value: T) {
-        return objectProperty.set(value)
+        return (objectProperty as ObservableProperty).superSet(value)
     }
 
     fun toReadOnly(): ReadOnlyProperty<T> {
@@ -53,9 +53,13 @@ open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
         objectProperty.unbindBidirectional(property.objectProperty)
     }
 
-    private class ObservableProperty<T>(value: T, private inline val setter: (value: T) -> Unit) : SimpleObjectProperty<T>(value) {
+    private class ObservableProperty<T>(value: T, private val setter: (value: T) -> Unit) : SimpleObjectProperty<T>(value) {
         override fun set(value: T) {
             setter(value)
+        }
+
+        fun superSet(value: T) {
+            super.set(value)
         }
     }
 }

@@ -1,5 +1,6 @@
 package zenith.core
 
+import javafx.scene.CacheHint
 import javafx.scene.canvas.GraphicsContext
 import zenith.drawable.Drawable
 import zenith.paint.Paint
@@ -9,6 +10,8 @@ object Renderer {
 
     init {
         Game.throwIfUninitialized()
+        Game.fxCanvas.isCache = true
+        Game.fxCanvas.cacheHint = CacheHint.SPEED
         gc = Game.fxCanvas.graphicsContext2D
     }
 

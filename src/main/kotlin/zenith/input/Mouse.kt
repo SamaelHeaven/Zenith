@@ -103,17 +103,7 @@ object Mouse {
     }
 
     private fun onScroll(event: ScrollEvent) {
-        val x = when {
-            event.deltaX > 0 -> 1
-            event.deltaX < 0 -> -1
-            else -> 0
-        }
-        val y = when {
-            event.deltaY > 0 -> 1
-            event.deltaY < 0 -> -1
-            else -> 0
-        }
-        newScroll = Vector2(x, y)
+        newScroll = Vector2(event.deltaX, event.deltaY)
     }
 
     private fun updatePosition() {

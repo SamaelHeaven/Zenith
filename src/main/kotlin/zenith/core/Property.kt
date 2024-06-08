@@ -53,7 +53,7 @@ open class Property<T>(@NamedArg("value") initialValue: T) : Observable<T>() {
         objectProperty.unbindBidirectional(property.objectProperty)
     }
 
-    private class ObservableProperty<T>(value: T, private val setter: (value: T) -> Unit) : SimpleObjectProperty<T>(value) {
+    private class ObservableProperty<T>(initialValue: T, private val setter: (value: T) -> Unit) : SimpleObjectProperty<T>(initialValue) {
         override fun set(value: T) {
             setter(value)
         }

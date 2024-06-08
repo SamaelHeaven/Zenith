@@ -11,17 +11,15 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     val name: String
     val positionProperty = Property(Vector2.ZERO)
     val scaleProperty = Property(Vector2.ZERO)
-    val pivotPointProperty = Property(Vector2.ZERO)
-    val rotationProperty = Property(0f)
-    val zIndexProperty = Property(0)
-    val disableProperty = Property(false)
-    val tags = mutableSetOf<String>()
-
     val originProperty = object : Property<Vector2>(Vector2.ZERO) {
         override fun set(value: Vector2) {
             super.set(value.clamp(-1, 1))
         }
     }
+    val pivotPointProperty = Property(Vector2.ZERO)
+    val rotationProperty = Property(0f)
+    val zIndexProperty = Property(0)
+    val tags = mutableSetOf<String>()
 
     var position: Vector2
         get() = positionProperty.value
@@ -59,36 +57,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
             zIndexProperty.value = value
         }
 
-    var disable: Boolean
-        get() = disableProperty.value
-        set(value) {
-            disableProperty.value = value
-        }
-
-    var x: Float
-        get() = position.x
-        set(value) {
-            position = Vector2(value, position.y)
-        }
-
-    var y: Float
-        get() = position.y
-        set(value) {
-            position = Vector2(position.x, value)
-        }
-
-    var width: Float
-        get() = scale.x
-        set(value) {
-            scale = Vector2(value, scale.y)
-        }
-
-    var height: Float
-        get() = scale.y
-        set(value) {
-            scale = Vector2(scale.x, value)
-        }
-
     constructor(
         @NamedArg("name") name: String = "",
         @NamedArg("position") position: Vector2 = Vector2.ZERO,
@@ -97,7 +65,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         @NamedArg("pivotPoint") pivotPoint: Vector2 = Vector2.ZERO,
         @NamedArg("rotation") rotation: Float = 0f,
         @NamedArg("zIndex") zIndex: Int = 0,
-        @NamedArg("disable") disable: Boolean = false,
         @NamedArg("tags") tags: Set<String> = setOf(),
         @NamedArg("components") components: Iterable<Component> = listOf()
     ) {
@@ -109,7 +76,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         this.pivotPoint = pivotPoint
         this.rotation = rotation
         this.zIndex = zIndex
-        this.disable = disable
         addComponents(components)
     }
 
@@ -221,9 +187,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     }
 
     internal fun update() {
-        if (disable) {
-            return
-        }
         for (component in _components) {
             component.callUpdate()
         }
@@ -231,9 +194,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     }
 
     internal fun fixedUpdate() {
-        if (disable) {
-            return
-        }
         for (component in _components) {
             component.callFixedUpdate()
         }

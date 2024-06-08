@@ -2,6 +2,7 @@ package zenith.input
 
 import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
+import javafx.scene.input.ScrollEvent
 import zenith.core.Game
 import zenith.math.Vector2
 import java.awt.MouseInfo
@@ -14,19 +15,22 @@ object Mouse {
     private val newPressedButtons = mutableSetOf<MouseButton>()
     private val newReleasedButtons = mutableSetOf<MouseButton>()
     private val newClickedButtons = mutableSetOf<MouseButton>()
-    private var _newPosition: Vector2? = null
+    private var newPosition: Vector2? = null
+    private var newScroll = Vector2.ZERO
     private var _position = Vector2.ZERO
     private val _downButtons = mutableSetOf<MouseButton>()
     private val _upButtons = mutableSetOf<MouseButton>()
     private val _pressedButtons = mutableSetOf<MouseButton>()
     private val _releasedButtons = mutableSetOf<MouseButton>()
     private val _clickedButtons = mutableSetOf<MouseButton>()
+    private var _scroll = Vector2.ZERO
     private val robot: Robot?
     val downButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_downButtons)
     val upButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_upButtons)
     val pressedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_pressedButtons)
     val releasedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_releasedButtons)
     val clickedButtons: Set<MouseButton> get() = Collections.unmodifiableSet(_clickedButtons)
+    val scroll: Vector2 get() = _scroll
 
     var position: Vector2
         get() = _position
@@ -39,6 +43,7 @@ object Mouse {
         Game.fxCanvas.onMousePressed = EventHandler { onMousePressed(it) }
         Game.fxCanvas.onMouseReleased = EventHandler { onMouseReleased(it) }
         Game.fxCanvas.onMouseClicked = EventHandler { onMouseClicked(it) }
+        Game.fxCanvas.onScroll = EventHandler { onScroll(it) }
         robot = try {
             Robot()
         } catch (e: Exception) {
@@ -78,10 +83,11 @@ object Mouse {
         updateReleasedButtons()
         updateUpButtons()
         updateClickedButtons()
+        updateScroll()
     }
 
     private fun onMouseMoved(event: MouseEvent) {
-        _newPosition = Vector2(event.x, event.y)
+        newPosition = Vector2(event.x, event.y)
     }
 
     private fun onMousePressed(event: MouseEvent) {
@@ -96,10 +102,24 @@ object Mouse {
         newClickedButtons.add(MouseButton.get(event.button))
     }
 
+    private fun onScroll(event: ScrollEvent) {
+        val x = when {
+            event.deltaX > 0 -> 1
+            event.deltaX < 0 -> -1
+            else -> 0
+        }
+        val y = when {
+            event.deltaY > 0 -> 1
+            event.deltaY < 0 -> -1
+            else -> 0
+        }
+        newScroll = Vector2(x, y)
+    }
+
     private fun updatePosition() {
-        _newPosition?.let {
+        newPosition?.let {
             _position = it
-            _newPosition = null
+            newPosition = null
         }
         try {
             val point = MouseInfo.getPointerInfo().location
@@ -140,6 +160,11 @@ object Mouse {
         newClickedButtons.clear()
     }
 
+    private fun updateScroll() {
+        _scroll = newScroll
+        newScroll = Vector2.ZERO
+    }
+
     private fun move(value: Vector2) {
         if (!Game.focused) {
             return
@@ -170,6 +195,8 @@ object Mouse {
         _releasedButtons.clear()
         newClickedButtons.clear()
         _clickedButtons.clear()
+        newScroll = Vector2.ZERO
+        _scroll = Vector2.ZERO
         updateUpButtons()
     }
 }

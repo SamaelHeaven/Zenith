@@ -15,7 +15,6 @@ abstract class Prefab : ListNode<Component>(), EntityProvider {
     open var pivotPoint = Vector2.ZERO
     open var rotation = 0f
     open var zIndex = 0
-    open var disable = false
     open var tags: StringSetNode = StringSetNode()
     open var components: Iterable<Component> = listOf()
 
@@ -46,7 +45,7 @@ abstract class Prefab : ListNode<Component>(), EntityProvider {
     abstract fun build(entity: Entity)
 
     final override fun provide(): Entity {
-        val entity = Entity(name, position, scale, origin, pivotPoint, rotation, zIndex, disable, tags, components)
+        val entity = Entity(name, position, scale, origin, pivotPoint, rotation, zIndex, tags, components)
         entity.addComponents(this)
         build(entity)
         return entity

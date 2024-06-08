@@ -1,14 +1,15 @@
 package zenith.core
 
+import javafx.beans.NamedArg
 import java.net.URL
 
 data class GameConfig(
-    val width: Int = 800,
-    val height: Int = 600,
-    val fpsTarget: Int = 60,
-    val title: String = "Game",
-    val fullscreen: Boolean = false,
-    val decorated: Boolean = true,
-    val resizable: Boolean = true,
-    val icon: URL? = null
+    @NamedArg("width") val width: Int = 800,
+    @NamedArg("height") val height: Int = 600,
+    @NamedArg("fpsTarget") val fpsTarget: Int = 60,
+    @NamedArg("title") val title: String = "Game",
+    @NamedArg("fullscreen") val fullscreen: Boolean = false,
+    @NamedArg("decorated") val decorated: Boolean = true,
+    @NamedArg("resizable") val resizable: Boolean = true,
+    @NamedArg("icon") val icon: URL? = null
 )

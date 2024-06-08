@@ -39,7 +39,7 @@ class Vector2 {
 
     operator fun times(v: Vector2) = Vector2(x * v.x, y * v.y)
 
-    operator fun div(v: Vector2) = Vector2(x / v.x, y / v.y)
+    operator fun div(v: Vector2) = Vector2(if (v.x == 0f) 0 else x / v.x, if (v.y == 0f) 0 else y / v.y)
 
     operator fun plus(f: Number) = Vector2(x + f.toFloat(), y + f.toFloat())
 
@@ -47,7 +47,7 @@ class Vector2 {
 
     operator fun times(f: Number) = Vector2(x * f.toFloat(), y * f.toFloat())
 
-    operator fun div(f: Number) = Vector2(x / f.toFloat(), y / f.toFloat())
+    operator fun div(f: Number) = if (f.toFloat() == 0f) ZERO else Vector2(x / f.toFloat(), y / f.toFloat())
 
     operator fun unaryMinus() = Vector2(-x, -y)
 
@@ -113,7 +113,11 @@ class Vector2 {
     }
 
     fun angleBetween(v: Vector2): Float {
-        return acos(dot(v) / (length() * v.length()))
+        val lengths = length() * v.length()
+        if (lengths == 0f) {
+            return 0f
+        }
+        return acos(dot(v) / lengths)
     }
 
     fun reflect(v: Vector2): Vector2 {
@@ -147,6 +151,6 @@ class Vector2 {
 
     fun normalize(): Vector2 {
         val length = length()
-        return if (length != 0f) Vector2(x / length, y / length) else ZERO
+        return Vector2(x, y) / length
     }
 }

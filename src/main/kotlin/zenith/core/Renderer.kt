@@ -24,22 +24,7 @@ object Renderer {
 
     fun draw(drawable: Drawable) {
         gc.save()
-        if (drawable.renderingMode == RenderingMode.WORLD) {
-            val camera = Game.scene.camera
-            val translate = -camera.target + camera.offset
-            val offset = Game.size / 2
-            if (camera.zoom != 1f) {
-                gc.translate(offset.x.toDouble(), offset.y.toDouble())
-                gc.scale(camera.zoom.toDouble(), camera.zoom.toDouble())
-                gc.translate(-offset.x.toDouble(), -offset.y.toDouble())
-            }
-            if (camera.rotation != 0f) {
-                gc.translate(offset.x.toDouble(), offset.y.toDouble())
-                gc.rotate(camera.rotation.toDouble())
-                gc.translate(-offset.x.toDouble(), -offset.y.toDouble())
-            }
-            gc.translate(translate.x.toDouble(), translate.y.toDouble())
-        }
+        gc.transform = drawable.renderingMode.transform
         drawable.draw(gc)
         gc.restore()
     }

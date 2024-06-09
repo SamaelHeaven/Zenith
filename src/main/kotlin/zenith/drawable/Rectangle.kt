@@ -12,6 +12,7 @@ import zenith.paint.Paint
 class Rectangle(
     @NamedArg("entity") entity: Entity? = null,
     @NamedArg("position") position: Vector2? = null,
+    @NamedArg("offset") offset: Vector2? = null,
     @NamedArg("size") size: Vector2? = null,
     @NamedArg("origin") origin: Vector2? = null,
     @NamedArg("pivotPoint") pivotPoint: Vector2? = null,
@@ -23,6 +24,7 @@ class Rectangle(
 ) : Drawable() {
     private var boundEntity: Entity? = null
     public override val positionProperty = Property(Vector2.ZERO)
+    val offsetProperty = Property(Vector2.ZERO)
     val sizeProperty = Property(Vector2.ZERO)
     public override val originProperty = object : Property<Vector2>(Vector2.ZERO) {
         override fun set(value: Vector2) {
@@ -39,6 +41,12 @@ class Rectangle(
         get() = positionProperty.value
         set(value) {
             positionProperty.value = value
+        }
+
+    var offset: Vector2
+        get() = offsetProperty.value
+        set(value) {
+            offsetProperty.value = value
         }
 
     var size: Vector2
@@ -86,6 +94,7 @@ class Rectangle(
     init {
         entity?.let { bind(entity) }
         position?.let { this.position = it }
+        offset?.let { this.offset = it }
         size?.let { this.size = it }
         origin?.let { this.origin = it }
         pivotPoint?.let { this.pivotPoint = it }
@@ -116,10 +125,24 @@ class Rectangle(
         }
     }
 
+    fun isOutsideScreen(): Boolean {
+        val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
+        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        return RenderingMode.isOutsideScreen(
+            renderingMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+        )
+    }
+
     override fun draw(gc: GraphicsContext) {
-        val topLeft = position - (size * 0.5 + size * (origin * 0.5))
+        val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
+        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        val outsideScreen = RenderingMode.isOutsideScreen(
+            gc.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+        )
+        if (outsideScreen) {
+            return
+        }
         if (rotation != 0f) {
-            val rotationPoint = (topLeft + size / 2) + pivotPoint
             gc.translate(rotationPoint.x.toDouble(), rotationPoint.y.toDouble())
             gc.rotate(rotation.toDouble())
             gc.translate(-rotationPoint.x.toDouble(), -rotationPoint.y.toDouble())

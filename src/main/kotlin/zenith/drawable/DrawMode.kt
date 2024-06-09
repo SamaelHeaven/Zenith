@@ -34,13 +34,13 @@ enum class DrawMode {
             }
     };
 
-    fun isOutsideView(entity: Entity): Boolean {
+    fun isVisible(entity: Entity): Boolean {
         val topLeft = entity.position - (entity.scale * 0.5 + entity.scale * (entity.origin * 0.5))
         val rotationPoint = (topLeft + entity.scale / 2) + entity.pivotPoint
-        return isOutsideView(transform, topLeft, entity.scale, rotationPoint, entity.rotation)
+        return isVisible(transform, topLeft, entity.scale, rotationPoint, entity.rotation)
     }
 
-    fun isOutsideView(
+    fun isVisible(
         position: Vector2,
         size: Vector2,
         origin: Vector2 = Vector2.ZERO,
@@ -49,13 +49,13 @@ enum class DrawMode {
     ): Boolean {
         val topLeft = position - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
-        return isOutsideView(transform, topLeft, size, rotationPoint, rotation)
+        return isVisible(transform, topLeft, size, rotationPoint, rotation)
     }
 
     internal abstract val transform: Affine
 
     companion object {
-        internal fun isOutsideView(
+        internal fun isVisible(
             transform: Affine, position: Vector2, size: Vector2, rotationPoint: Vector2, rotation: Float
         ): Boolean {
             val points = listOf(
@@ -81,7 +81,7 @@ enum class DrawMode {
             val maxX = transformedPoints.maxOf { it.x }
             val minY = transformedPoints.minOf { it.y }
             val maxY = transformedPoints.maxOf { it.y }
-            return maxX < 0 || minX > Game.width || maxY < 0 || minY > Game.height
+            return maxX >= 0 && minX <= Game.width && maxY >= 0 && minY <= Game.height
         }
     }
 }

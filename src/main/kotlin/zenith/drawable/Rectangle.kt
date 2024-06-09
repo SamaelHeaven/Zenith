@@ -121,13 +121,14 @@ class Rectangle(
             originProperty.unbindBidirectional(it.originProperty)
             pivotPointProperty.unbindBidirectional(it.pivotPointProperty)
             rotationProperty.unbindBidirectional(it.rotationProperty)
+            boundEntity = null
         }
     }
 
-    fun isOutsideView(): Boolean {
+    fun isVisible(): Boolean {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
-        return DrawMode.isOutsideView(
+        return DrawMode.isVisible(
             drawMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
         )
     }
@@ -135,10 +136,10 @@ class Rectangle(
     override fun draw(gc: GraphicsContext) {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
-        val outsideScreen = DrawMode.isOutsideView(
+        val visible = DrawMode.isVisible(
             gc.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
         )
-        if (outsideScreen) {
+        if (!visible) {
             return
         }
         if (rotation != 0f) {

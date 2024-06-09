@@ -8,11 +8,12 @@ import zenith.paint.Color
 import zenith.paint.Paint
 
 class RectanglePrefab : Prefab() {
+    var drawMode = DrawMode.CAMERA
     var offset = Vector2.ZERO
     var fill: Paint = Color.TRANSPARENT
     var stroke: Paint = Color.TRANSPARENT
     var strokeWidth = 0.0f
-    var drawMode = DrawMode.CAMERA
+    var radius = 0f
 
     override fun build(entity: Entity) {
         entity.addComponent(
@@ -22,6 +23,7 @@ class RectanglePrefab : Prefab() {
                 fill = fill,
                 stroke = stroke,
                 strokeWidth = strokeWidth,
+                radius = radius,
                 drawMode = drawMode
             )
         )

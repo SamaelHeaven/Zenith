@@ -11,5 +11,7 @@ abstract class Drawable : Component() {
         Renderer.draw(this)
     }
 
+    abstract fun isVisible(): Boolean
+
     internal abstract fun draw(gc: GraphicsContext)
 }

@@ -19,7 +19,8 @@ class Rectangle(
     @NamedArg("renderingMode") drawMode: DrawMode? = null,
     @NamedArg("fill") fill: Paint = Color.TRANSPARENT,
     @NamedArg("stroke") stroke: Paint = Color.TRANSPARENT,
-    @NamedArg("strokeWidth") strokeWidth: Float = 0f
+    @NamedArg("strokeWidth") strokeWidth: Float = 0f,
+    @NamedArg("radius") radius: Float = 0f
 ) : Drawable() {
     private var boundEntity: Entity? = null
     public override val positionProperty = Property(Vector2.ZERO)
@@ -32,9 +33,10 @@ class Rectangle(
     }
     public override val pivotPointProperty = Property(Vector2.ZERO)
     public override val rotationProperty = Property(0f)
-    val fillProperty: Property<Paint>
-    val strokeProperty: Property<Paint>
-    val strokeWidthProperty: Property<Float>
+    val fillProperty = Property(fill)
+    val strokeProperty = Property(stroke)
+    val strokeWidthProperty = Property(strokeWidth)
+    val radiusProperty = Property(radius)
 
     public override var position: Vector2
         get() = positionProperty.value
@@ -90,6 +92,12 @@ class Rectangle(
             strokeWidthProperty.value = value
         }
 
+    var radius: Float
+        get() = radiusProperty.value
+        set(value) {
+            radiusProperty.value = value
+        }
+
     init {
         entity?.let { bind(entity) }
         position?.let { this.position = it }
@@ -99,9 +107,6 @@ class Rectangle(
         pivotPoint?.let { this.pivotPoint = it }
         rotation?.let { this.rotation = it }
         drawMode?.let { this.drawMode = it }
-        fillProperty = Property(fill)
-        strokeProperty = Property(stroke)
-        strokeWidthProperty = Property(strokeWidth)
     }
 
     fun bind(entity: Entity) {
@@ -125,7 +130,7 @@ class Rectangle(
         }
     }
 
-    fun isVisible(): Boolean {
+    override fun isVisible(): Boolean {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
         return DrawMode.isVisible(
@@ -149,12 +154,34 @@ class Rectangle(
         }
         if (fill != Color.TRANSPARENT) {
             gc.fill = fill.fxPaint
-            gc.fillRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
+            if (radius <= 0) {
+                gc.fillRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
+            } else {
+                gc.fillRoundRect(
+                    topLeft.x.toDouble(),
+                    topLeft.y.toDouble(),
+                    size.x.toDouble(),
+                    size.y.toDouble(),
+                    radius.toDouble(),
+                    radius.toDouble()
+                )
+            }
         }
         if (stroke != Color.TRANSPARENT && strokeWidth > 0) {
             gc.stroke = stroke.fxPaint
             gc.lineWidth = strokeWidth.toDouble()
-            gc.strokeRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
+            if (radius <= 0) {
+                gc.strokeRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
+            } else {
+                gc.strokeRoundRect(
+                    topLeft.x.toDouble(),
+                    topLeft.y.toDouble(),
+                    size.x.toDouble(),
+                    size.y.toDouble(),
+                    radius.toDouble(),
+                    radius.toDouble()
+                )
+            }
         }
     }
 }

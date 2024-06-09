@@ -217,7 +217,7 @@ object Game {
         gameLoop.start()
     }
 
-    private class GameLoop(val callback: () -> Unit) : AnimationTimer() {
+    private class GameLoop(private val callback: () -> Unit) : AnimationTimer() {
         override fun handle(arg: Long) {
             callback()
         }

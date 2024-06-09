@@ -82,7 +82,7 @@ object Game {
     val focused: Boolean
         get() {
             throwIfUninitialized()
-            return fxRoot.isFocused
+            return _fxStage.isFocused
         }
 
     var fullscreen: Boolean

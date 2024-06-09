@@ -3,10 +3,9 @@ package zenith.drawable
 import javafx.scene.canvas.GraphicsContext
 import zenith.core.Component
 import zenith.core.Renderer
-import zenith.core.RenderingMode
 
 abstract class Drawable : Component() {
-    var renderingMode = RenderingMode.WORLD
+    var drawMode = DrawMode.CAMERA
 
     final override fun update() {
         Renderer.draw(this)

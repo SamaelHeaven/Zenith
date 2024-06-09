@@ -4,7 +4,6 @@ import javafx.beans.NamedArg
 import javafx.scene.canvas.GraphicsContext
 import zenith.core.Entity
 import zenith.core.Property
-import zenith.core.RenderingMode
 import zenith.math.Vector2
 import zenith.paint.Color
 import zenith.paint.Paint
@@ -17,7 +16,7 @@ class Rectangle(
     @NamedArg("origin") origin: Vector2? = null,
     @NamedArg("pivotPoint") pivotPoint: Vector2? = null,
     @NamedArg("rotation") rotation: Float? = null,
-    @NamedArg("renderingMode") renderingMode: RenderingMode? = null,
+    @NamedArg("renderingMode") drawMode: DrawMode? = null,
     @NamedArg("fill") fill: Paint = Color.TRANSPARENT,
     @NamedArg("stroke") stroke: Paint = Color.TRANSPARENT,
     @NamedArg("strokeWidth") strokeWidth: Float = 0f
@@ -99,7 +98,7 @@ class Rectangle(
         origin?.let { this.origin = it }
         pivotPoint?.let { this.pivotPoint = it }
         rotation?.let { this.rotation = it }
-        renderingMode?.let { this.renderingMode = it }
+        drawMode?.let { this.drawMode = it }
         fillProperty = Property(fill)
         strokeProperty = Property(stroke)
         strokeWidthProperty = Property(strokeWidth)
@@ -125,18 +124,18 @@ class Rectangle(
         }
     }
 
-    fun isOutsideScreen(): Boolean {
+    fun isOutsideView(): Boolean {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
-        return RenderingMode.isOutsideScreen(
-            renderingMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+        return DrawMode.isOutsideView(
+            drawMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
         )
     }
 
     override fun draw(gc: GraphicsContext) {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
-        val outsideScreen = RenderingMode.isOutsideScreen(
+        val outsideScreen = DrawMode.isOutsideView(
             gc.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
         )
         if (outsideScreen) {

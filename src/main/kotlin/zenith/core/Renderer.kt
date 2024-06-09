@@ -24,7 +24,7 @@ object Renderer {
 
     fun draw(drawable: Drawable) {
         gc.save()
-        gc.transform = drawable.renderingMode.transform
+        gc.transform = drawable.drawMode.transform
         drawable.draw(gc)
         gc.restore()
     }

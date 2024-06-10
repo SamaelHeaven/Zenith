@@ -10,6 +10,7 @@ class SpritePrefab : DrawablePrefab<Sprite>() {
     var texture: Texture? = null
     var flippedHorizontally = false
     var flippedVertically = false
+    var smooth = false
 
     override fun buildDrawable(entity: Entity): Sprite {
         return Sprite(
@@ -18,6 +19,7 @@ class SpritePrefab : DrawablePrefab<Sprite>() {
             texture = texture,
             flippedHorizontally = flippedHorizontally,
             flippedVertically = flippedVertically,
+            smooth = smooth,
             alpha = alpha,
             drawMode = drawMode
         )

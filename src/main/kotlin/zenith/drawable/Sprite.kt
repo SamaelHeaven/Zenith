@@ -19,7 +19,8 @@ class Sprite(
     @NamedArg("alpha") alpha: Float? = null,
     @NamedArg("texture") texture: Texture? = null,
     @NamedArg("flippedHorizontally") flippedHorizontally: Boolean = false,
-    @NamedArg("flippedVertically") flippedVertically: Boolean = false
+    @NamedArg("flippedVertically") flippedVertically: Boolean = false,
+    @NamedArg("smooth") smooth: Boolean = false
 ) : Drawable(), EntityDrawable {
     private var boundEntity: Entity? = null
     public override val positionProperty = Property(Vector2.ZERO)
@@ -35,6 +36,7 @@ class Sprite(
     val textureProperty: Property<Texture?> = Property(texture)
     val flippedHorizontallyProperty = Property(flippedHorizontally)
     val flippedVerticallyProperty = Property(flippedVertically)
+    val smoothProperty = Property(smooth)
 
     public override var position: Vector2
         get() = positionProperty.value
@@ -88,6 +90,12 @@ class Sprite(
         get() = flippedVerticallyProperty.value
         set(value) {
             flippedVerticallyProperty.value = value
+        }
+
+    var smooth: Boolean
+        get() = smoothProperty.value
+        set(value) {
+            smoothProperty.value = value
         }
 
     init {
@@ -157,6 +165,7 @@ class Sprite(
             actualPosition += Vector2.DOWN * size
             actualSize = Vector2(actualSize.x, -actualSize.y)
         }
+        gc.isImageSmoothing = smooth
         gc.drawImage(
             texture?.fxImage,
             actualPosition.x.toDouble(),

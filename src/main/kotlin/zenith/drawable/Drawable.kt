@@ -2,12 +2,19 @@ package zenith.drawable
 
 import javafx.scene.canvas.GraphicsContext
 import zenith.core.Component
+import zenith.core.Property
 import zenith.core.Renderer
 
 abstract class Drawable : Component() {
-    var drawMode = DrawMode.CAMERA
+    val drawModeProperty = Property(DrawMode.CAMERA)
 
-    final override fun update() {
+    var drawMode: DrawMode
+        get() = drawModeProperty.value
+        set(value) {
+            drawModeProperty.value = value
+        }
+
+    override fun update() {
         Renderer.draw(this)
     }
 

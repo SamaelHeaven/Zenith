@@ -2,13 +2,14 @@ package zenith.drawable
 
 import javafx.beans.NamedArg
 import javafx.scene.canvas.GraphicsContext
+import zenith.asset.Texture
 import zenith.core.Entity
 import zenith.core.Property
 import zenith.math.Vector2
-import zenith.paint.Color
-import zenith.paint.Paint
+import kotlin.math.max
+import kotlin.math.min
 
-class Rectangle(
+class Sprite(
     @NamedArg("entity") entity: Entity? = null,
     @NamedArg("position") position: Vector2? = null,
     @NamedArg("offset") offset: Vector2? = null,
@@ -17,10 +18,10 @@ class Rectangle(
     @NamedArg("pivotPoint") pivotPoint: Vector2? = null,
     @NamedArg("rotation") rotation: Float? = null,
     @NamedArg("drawMode") drawMode: DrawMode? = null,
-    @NamedArg("fill") fill: Paint = Color.TRANSPARENT,
-    @NamedArg("stroke") stroke: Paint = Color.TRANSPARENT,
-    @NamedArg("strokeWidth") strokeWidth: Float = 0f,
-    @NamedArg("radius") radius: Float = 0f
+    @NamedArg("texture") texture: Texture? = null,
+    @NamedArg("flippedHorizontally") flippedHorizontally: Boolean = false,
+    @NamedArg("flippedVertically") flippedVertically: Boolean = false,
+    @NamedArg("alpha") alpha: Float = 1f
 ) : Drawable(), EntityDrawable {
     private var boundEntity: Entity? = null
     public override val positionProperty = Property(Vector2.ZERO)
@@ -33,10 +34,14 @@ class Rectangle(
     }
     public override val pivotPointProperty = Property(Vector2.ZERO)
     public override val rotationProperty = Property(0f)
-    val fillProperty = Property(fill)
-    val strokeProperty = Property(stroke)
-    val strokeWidthProperty = Property(strokeWidth)
-    val radiusProperty = Property(radius)
+    val textureProperty: Property<Texture?> = Property(texture)
+    val flippedHorizontallyProperty = Property(flippedHorizontally)
+    val flippedVerticallyProperty = Property(flippedVertically)
+    val alphaProperty = object : Property<Float>(alpha) {
+        override fun set(value: Float) {
+            super.set(max(0f, min(value, 1f)))
+        }
+    }
 
     public override var position: Vector2
         get() = positionProperty.value
@@ -74,28 +79,28 @@ class Rectangle(
             rotationProperty.value = value
         }
 
-    var fill: Paint
-        get() = fillProperty.value
+    var texture: Texture?
+        get() = textureProperty.value
         set(value) {
-            fillProperty.value = value
+            textureProperty.value = value
         }
 
-    var stroke: Paint
-        get() = strokeProperty.value
+    var flippedHorizontally: Boolean
+        get() = flippedHorizontallyProperty.value
         set(value) {
-            strokeProperty.value = value
+            flippedHorizontallyProperty.value = value
         }
 
-    var strokeWidth: Float
-        get() = strokeWidthProperty.value
+    var flippedVertically: Boolean
+        get() = flippedVerticallyProperty.value
         set(value) {
-            strokeWidthProperty.value = value
+            flippedVerticallyProperty.value = value
         }
 
-    var radius: Float
-        get() = radiusProperty.value
+    var alpha: Float
+        get() = alphaProperty.value
         set(value) {
-            radiusProperty.value = value
+            alphaProperty.value = value
         }
 
     init {
@@ -131,18 +136,17 @@ class Rectangle(
     }
 
     override fun isVisible(): Boolean {
-        val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
-        val rotationPoint = (topLeft + size / 2) + pivotPoint
-        return DrawMode.isVisible(
-            drawMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
-        )
+        return drawMode.isVisible(position, size, origin, pivotPoint, rotation)
     }
 
     override fun draw(gc: GraphicsContext) {
+        if (texture == null) {
+            return
+        }
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
         val rotationPoint = (topLeft + size / 2) + pivotPoint
         val visible = DrawMode.isVisible(
-            gc.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+            gc.transform, topLeft, size, rotationPoint, rotation
         )
         if (!visible) {
             return
@@ -152,44 +156,23 @@ class Rectangle(
             gc.rotate(rotation.toDouble())
             gc.translate(-rotationPoint.x.toDouble(), -rotationPoint.y.toDouble())
         }
-        if (fill != Color.TRANSPARENT) {
-            drawFill(gc, topLeft)
+        gc.globalAlpha = alpha.toDouble()
+        var actualPosition = topLeft
+        var actualSize = size
+        if (flippedHorizontally) {
+            actualPosition -= Vector2.RIGHT * size
+            actualSize = Vector2(-actualSize.x, actualSize.y)
         }
-        if (stroke != Color.TRANSPARENT && strokeWidth > 0) {
-            drawStroke(gc, topLeft)
+        if (flippedVertically) {
+            actualPosition -= Vector2.DOWN * size
+            actualSize = Vector2(actualSize.x, -actualSize.y)
         }
-    }
-
-    private fun drawFill(gc: GraphicsContext, topLeft: Vector2) {
-        gc.fill = fill.fxPaint
-        if (radius <= 0) {
-            gc.fillRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
-            return
-        }
-        gc.fillRoundRect(
-            topLeft.x.toDouble(),
-            topLeft.y.toDouble(),
-            size.x.toDouble(),
-            size.y.toDouble(),
-            radius.toDouble(),
-            radius.toDouble()
-        )
-    }
-
-    private fun drawStroke(gc: GraphicsContext, topLeft: Vector2) {
-        gc.stroke = stroke.fxPaint
-        gc.lineWidth = strokeWidth.toDouble()
-        if (radius <= 0) {
-            gc.strokeRect(topLeft.x.toDouble(), topLeft.y.toDouble(), size.x.toDouble(), size.y.toDouble())
-            return
-        }
-        gc.strokeRoundRect(
-            topLeft.x.toDouble(),
-            topLeft.y.toDouble(),
-            size.x.toDouble(),
-            size.y.toDouble(),
-            radius.toDouble(),
-            radius.toDouble()
+        gc.drawImage(
+            texture?.fxImage,
+            actualPosition.x.toDouble(),
+            actualPosition.y.toDouble(),
+            actualSize.x.toDouble(),
+            actualSize.y.toDouble()
         )
     }
 }

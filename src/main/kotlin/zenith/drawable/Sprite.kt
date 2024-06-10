@@ -112,6 +112,9 @@ class Sprite(
         pivotPoint?.let { this.pivotPoint = it }
         rotation?.let { this.rotation = it }
         drawMode?.let { this.drawMode = it }
+        if (this.size == Vector2.ZERO) {
+            this.size = texture?.size ?: Vector2.ZERO
+        }
     }
 
     override fun bind(entity: Entity) {
@@ -160,11 +163,11 @@ class Sprite(
         var actualPosition = topLeft
         var actualSize = size
         if (flippedHorizontally) {
-            actualPosition -= Vector2.RIGHT * size
+            actualPosition += Vector2.RIGHT * size
             actualSize = Vector2(-actualSize.x, actualSize.y)
         }
         if (flippedVertically) {
-            actualPosition -= Vector2.DOWN * size
+            actualPosition += Vector2.DOWN * size
             actualSize = Vector2(actualSize.x, -actualSize.y)
         }
         gc.drawImage(

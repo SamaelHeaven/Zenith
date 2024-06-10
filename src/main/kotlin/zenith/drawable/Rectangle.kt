@@ -17,6 +17,7 @@ class Rectangle(
     @NamedArg("pivotPoint") pivotPoint: Vector2? = null,
     @NamedArg("rotation") rotation: Float? = null,
     @NamedArg("drawMode") drawMode: DrawMode? = null,
+    @NamedArg("alpha") alpha: Float? = null,
     @NamedArg("fill") fill: Paint = Color.TRANSPARENT,
     @NamedArg("stroke") stroke: Paint = Color.TRANSPARENT,
     @NamedArg("strokeWidth") strokeWidth: Float = 0f,
@@ -107,6 +108,7 @@ class Rectangle(
         pivotPoint?.let { this.pivotPoint = it }
         rotation?.let { this.rotation = it }
         drawMode?.let { this.drawMode = it }
+        alpha?.let { this.alpha = it }
     }
 
     override fun bind(entity: Entity) {

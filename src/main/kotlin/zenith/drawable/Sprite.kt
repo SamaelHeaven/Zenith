@@ -6,8 +6,6 @@ import zenith.asset.Texture
 import zenith.core.Entity
 import zenith.core.Property
 import zenith.math.Vector2
-import kotlin.math.max
-import kotlin.math.min
 
 class Sprite(
     @NamedArg("entity") entity: Entity? = null,
@@ -18,10 +16,10 @@ class Sprite(
     @NamedArg("pivotPoint") pivotPoint: Vector2? = null,
     @NamedArg("rotation") rotation: Float? = null,
     @NamedArg("drawMode") drawMode: DrawMode? = null,
+    @NamedArg("alpha") alpha: Float? = null,
     @NamedArg("texture") texture: Texture? = null,
     @NamedArg("flippedHorizontally") flippedHorizontally: Boolean = false,
-    @NamedArg("flippedVertically") flippedVertically: Boolean = false,
-    @NamedArg("alpha") alpha: Float = 1f
+    @NamedArg("flippedVertically") flippedVertically: Boolean = false
 ) : Drawable(), EntityDrawable {
     private var boundEntity: Entity? = null
     public override val positionProperty = Property(Vector2.ZERO)
@@ -37,11 +35,6 @@ class Sprite(
     val textureProperty: Property<Texture?> = Property(texture)
     val flippedHorizontallyProperty = Property(flippedHorizontally)
     val flippedVerticallyProperty = Property(flippedVertically)
-    val alphaProperty = object : Property<Float>(alpha) {
-        override fun set(value: Float) {
-            super.set(max(0f, min(value, 1f)))
-        }
-    }
 
     public override var position: Vector2
         get() = positionProperty.value
@@ -97,12 +90,6 @@ class Sprite(
             flippedVerticallyProperty.value = value
         }
 
-    var alpha: Float
-        get() = alphaProperty.value
-        set(value) {
-            alphaProperty.value = value
-        }
-
     init {
         entity?.let { bind(entity) }
         position?.let { this.position = it }
@@ -112,6 +99,7 @@ class Sprite(
         pivotPoint?.let { this.pivotPoint = it }
         rotation?.let { this.rotation = it }
         drawMode?.let { this.drawMode = it }
+        alpha?.let { this.alpha = it }
         if (this.size == Vector2.ZERO) {
             this.size = texture?.size ?: Vector2.ZERO
         }
@@ -159,7 +147,6 @@ class Sprite(
             gc.rotate(rotation.toDouble())
             gc.translate(-rotationPoint.x.toDouble(), -rotationPoint.y.toDouble())
         }
-        gc.globalAlpha = alpha.toDouble()
         var actualPosition = topLeft
         var actualSize = size
         if (flippedHorizontally) {

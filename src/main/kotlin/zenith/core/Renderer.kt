@@ -25,6 +25,7 @@ object Renderer {
     fun draw(drawable: Drawable) {
         gc.save()
         gc.transform = drawable.drawMode.transform
+        gc.globalAlpha = drawable.alpha.toDouble()
         drawable.draw(gc)
         gc.restore()
     }

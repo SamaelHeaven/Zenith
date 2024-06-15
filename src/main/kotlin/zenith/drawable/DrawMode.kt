@@ -19,7 +19,7 @@ enum class DrawMode {
             get() {
                 val camera = Game.scene.camera
                 val translate = -camera.target + camera.offset
-                val offset = Game.size / 2
+                val offset = Game.size * 0.5f
                 val transform = Affine()
                 if (camera.zoom != 1f) {
                     transform.appendScale(

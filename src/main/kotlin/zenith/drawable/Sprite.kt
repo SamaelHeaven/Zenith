@@ -103,7 +103,7 @@ class Sprite(
         get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
         set(value) {
             position = value.position + (value.size * 0.5 + value.size * (origin * 0.5))
-            scale = value.size
+            size = value.size
         }
 
     init {

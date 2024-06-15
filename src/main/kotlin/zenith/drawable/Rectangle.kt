@@ -35,7 +35,6 @@ class Rectangle(
     val strokeProperty = Property(stroke)
     val strokeWidthProperty = Property(strokeWidth)
     val radiusProperty = Property(radius)
-    public override val boundingBox: BoundingBox get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
 
     public override val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
         setter(value.clamp(-1, 1))
@@ -99,6 +98,13 @@ class Rectangle(
         get() = radiusProperty.value
         set(value) {
             radiusProperty.value = value
+        }
+
+    public override var boundingBox: BoundingBox
+        get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
+        set(value) {
+            position = value.position + (value.size * 0.5 + value.size * (origin * 0.5))
+            scale = value.size
         }
 
     init {

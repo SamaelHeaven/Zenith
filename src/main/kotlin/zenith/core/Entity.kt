@@ -16,7 +16,6 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
     val rotationProperty = Property(0f)
     val zIndexProperty = Property(0)
     val tags = mutableSetOf<String>()
-    val boundingBox: BoundingBox get() = BoundingBox.from(this)
 
     val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
         setter(value.clamp(-1, 1))
@@ -56,6 +55,13 @@ class Entity : EntityProvider, Iterable<Component>, Comparable<Entity> {
         get() = zIndexProperty.value
         set(value) {
             zIndexProperty.value = value
+        }
+
+    var boundingBox: BoundingBox
+        get() = BoundingBox.from(this)
+        set(value) {
+            position = value.position + (value.size * 0.5 + value.size * (origin * 0.5))
+            scale = value.size
         }
 
     constructor(

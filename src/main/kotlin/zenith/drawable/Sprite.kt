@@ -34,7 +34,6 @@ class Sprite(
     val flippedHorizontallyProperty = Property(flippedHorizontally)
     val flippedVerticallyProperty = Property(flippedVertically)
     val smoothProperty = Property(smooth)
-    public override val boundingBox: BoundingBox get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
 
     public override val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
         setter(value.clamp(-1, 1))
@@ -98,6 +97,13 @@ class Sprite(
         get() = smoothProperty.value
         set(value) {
             smoothProperty.value = value
+        }
+
+    public override var boundingBox: BoundingBox
+        get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
+        set(value) {
+            position = value.position + (value.size * 0.5 + value.size * (origin * 0.5))
+            scale = value.size
         }
 
     init {

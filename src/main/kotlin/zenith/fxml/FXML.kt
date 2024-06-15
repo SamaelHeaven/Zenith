@@ -6,6 +6,8 @@ import java.io.InputStream
 import java.net.URL
 
 object FXML {
+    private val fxmlLoader = FXMLLoader()
+
     fun <T> load(resource: String, controller: Any? = null): T {
         return load(Resource.url(resource), controller)
     }
@@ -17,9 +19,9 @@ object FXML {
     }
 
     fun <T> load(input: InputStream, controller: Any? = null, location: URL? = null): T {
-        val fxmlLoader = FXMLLoader()
-        location?.let { fxmlLoader.location = it }
-        controller?.let { fxmlLoader.setController(controller) }
+        fxmlLoader.setRoot(null)
+        fxmlLoader.location = location
+        fxmlLoader.setController(controller)
         return fxmlLoader.load(input)
     }
 }

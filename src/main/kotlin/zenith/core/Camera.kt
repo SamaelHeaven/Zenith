@@ -6,12 +6,11 @@ import kotlin.math.max
 class Camera {
     val targetProperty = Property(Vector2.ZERO)
     val offsetProperty = Property(Vector2.ZERO)
-    val zoomProperty = object : Property<Float>(1f) {
-        override fun set(value: Float) {
-            super.set(max(0f, value))
-        }
-    }
     val rotationProperty = Property(0f)
+
+    val zoomProperty: Property<Float> = CustomProperty(1f) { _, value, setter ->
+        setter(max(0f, value))
+    }
 
     var target: Vector2
         get() = targetProperty.value

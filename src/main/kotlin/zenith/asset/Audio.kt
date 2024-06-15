@@ -9,6 +9,7 @@ import org.lwjgl.openal.ALC11
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.libc.LibCStdlib
+import zenith.core.CustomProperty
 import zenith.core.Property
 import zenith.io.ByteBufferUtils
 import zenith.io.Resource
@@ -30,17 +31,15 @@ class Audio(
     private val clips = mutableListOf<Clip>()
     private val disposedClips = mutableListOf<Clip>()
 
-    val volumeProperty = object : Property<Float>(volume) {
-        override fun set(value: Float) {
-            cleanClips()
-            val newValue = clampVolume(value)
-            if (newValue == this.value) {
-                return
-            }
-            super.set(newValue)
-            for (clip in clips) {
-                clip.changeVolume(newValue)
-            }
+    val volumeProperty: Property<Float> = CustomProperty(volume) { property, value, setter ->
+        cleanClips()
+        val newValue = clampVolume(value)
+        if (newValue == property.value) {
+            return@CustomProperty
+        }
+        setter(newValue)
+        for (clip in clips) {
+            clip.changeVolume(newValue)
         }
     }
 
@@ -60,16 +59,14 @@ class Audio(
         private var audioContext = MemoryUtil.NULL
         private var audioDevice = MemoryUtil.NULL
 
-        val volumeProperty = object : Property<Float>(1f) {
-            override fun set(value: Float) {
-                val newValue = clampVolume(value)
-                if (newValue == this.value) {
-                    return
-                }
-                super.set(newValue)
-                for (clip in globalClips.toTypedArray()) {
-                    clip.changeVolume(clip.volume)
-                }
+        val volumeProperty: Property<Float> = CustomProperty(1f) { property, value, setter ->
+            val newValue = clampVolume(value)
+            if (newValue == property.value) {
+                return@CustomProperty
+            }
+            setter(newValue)
+            for (clip in globalClips.toTypedArray()) {
+                clip.changeVolume(clip.volume)
             }
         }
 

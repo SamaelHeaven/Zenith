@@ -3,6 +3,7 @@ package zenith.drawable
 import javafx.beans.NamedArg
 import javafx.scene.canvas.GraphicsContext
 import zenith.asset.Texture
+import zenith.core.CustomProperty
 import zenith.core.Entity
 import zenith.core.Property
 import zenith.math.Vector2
@@ -26,17 +27,16 @@ class Sprite(
     public override val positionProperty = Property(Vector2.ZERO)
     val offsetProperty = Property(Vector2.ZERO)
     val sizeProperty = Property(Vector2.ZERO)
-    public override val originProperty = object : Property<Vector2>(Vector2.ZERO) {
-        override fun set(value: Vector2) {
-            super.set(value.clamp(-1, 1))
-        }
-    }
     public override val pivotPointProperty = Property(Vector2.ZERO)
     public override val rotationProperty = Property(0f)
     val textureProperty: Property<Texture?> = Property(texture)
     val flippedHorizontallyProperty = Property(flippedHorizontally)
     val flippedVerticallyProperty = Property(flippedVertically)
     val smoothProperty = Property(smooth)
+
+    public override val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
+        setter(value.clamp(-1, 1))
+    }
 
     public override var position: Vector2
         get() = positionProperty.value

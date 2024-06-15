@@ -2,6 +2,7 @@ package zenith.drawable
 
 import javafx.scene.canvas.GraphicsContext
 import zenith.core.Component
+import zenith.core.CustomProperty
 import zenith.core.Property
 import zenith.core.Renderer
 import kotlin.math.max
@@ -9,10 +10,9 @@ import kotlin.math.min
 
 abstract class Drawable : Component() {
     val drawModeProperty = Property(DrawMode.CAMERA)
-    val alphaProperty = object : Property<Float>(1f) {
-        override fun set(value: Float) {
-            super.set(max(0f, min(value, 1f)))
-        }
+
+    val alphaProperty: Property<Float> = CustomProperty(1f) { _, value, setter ->
+        setter(max(0f, min(value, 1f)))
     }
 
     var drawMode: DrawMode

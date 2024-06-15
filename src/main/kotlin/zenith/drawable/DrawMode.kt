@@ -19,7 +19,7 @@ enum class DrawMode {
             get() {
                 val camera = Game.scene.camera
                 val translate = -camera.target + camera.offset
-                val offset = Game.size * 0.5f
+                val offset = Game.size * 0.5
                 val transform = Affine()
                 if (camera.zoom != 1f) {
                     transform.appendScale(
@@ -36,7 +36,7 @@ enum class DrawMode {
 
     fun isVisible(entity: Entity): Boolean {
         val topLeft = entity.position - (entity.scale * 0.5 + entity.scale * (entity.origin * 0.5))
-        val rotationPoint = (topLeft + entity.scale / 2) + entity.pivotPoint
+        val rotationPoint = (topLeft + entity.scale * 0.5) + entity.pivotPoint
         return isVisible(transform, topLeft, entity.scale, rotationPoint, entity.rotation)
     }
 
@@ -48,7 +48,7 @@ enum class DrawMode {
         rotation: Float = 0f
     ): Boolean {
         val topLeft = position - (size * 0.5 + size * (origin * 0.5))
-        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        val rotationPoint = (topLeft + size * 0.5) + pivotPoint
         return isVisible(transform, topLeft, size, rotationPoint, rotation)
     }
 

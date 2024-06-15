@@ -145,7 +145,7 @@ class Sprite(
             return
         }
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
-        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        val rotationPoint = (topLeft + size * 0.5) + pivotPoint
         val visible = DrawMode.isVisible(
             gc.transform, topLeft, size, rotationPoint, rotation
         )

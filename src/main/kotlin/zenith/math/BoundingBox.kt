@@ -24,22 +24,16 @@ data class BoundingBox(
         }
 
         fun from(
-            position: Vector2,
-            size: Vector2,
-            origin: Vector2,
-            pivotPoint: Vector2,
-            rotation: Float
+            position: Vector2, size: Vector2, origin: Vector2, pivotPoint: Vector2, rotation: Float
         ): BoundingBox {
-            val halfSize = size * 0.5
-            val originOffset = size * (origin * 0.5)
-            val topLeft = position - halfSize + originOffset
+            val topLeft = position - (size * 0.5 + size * (origin * 0.5))
             if (rotation == 0f) {
                 return BoundingBox(topLeft, size)
             }
             val topRight = topLeft + Vector2.RIGHT * size
             val bottomLeft = topLeft + Vector2.DOWN * size
             val bottomRight = topLeft + size
-            val rotationPoint = position + pivotPoint
+            val rotationPoint = (topLeft + size * 0.5) + pivotPoint
             val rotatedTopLeft = rotatePoint(topLeft, rotation, rotationPoint)
             val rotatedTopRight = rotatePoint(topRight, rotation, rotationPoint)
             val rotatedBottomLeft = rotatePoint(bottomLeft, rotation, rotationPoint)

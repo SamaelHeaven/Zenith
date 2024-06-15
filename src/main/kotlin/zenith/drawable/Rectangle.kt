@@ -136,17 +136,17 @@ class Rectangle(
 
     override fun isVisible(): Boolean {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
-        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        val rotationPoint = (topLeft + size * 0.5) + pivotPoint
         return DrawMode.isVisible(
-            drawMode.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+            drawMode.transform, topLeft - strokeWidth * 0.5, size + strokeWidth, rotationPoint, rotation
         )
     }
 
     override fun draw(gc: GraphicsContext) {
         val topLeft = position + offset - (size * 0.5 + size * (origin * 0.5))
-        val rotationPoint = (topLeft + size / 2) + pivotPoint
+        val rotationPoint = (topLeft + size * 0.5) + pivotPoint
         val visible = DrawMode.isVisible(
-            gc.transform, topLeft - strokeWidth / 2, size + strokeWidth, rotationPoint, rotation
+            gc.transform, topLeft - strokeWidth * 0.5, size + strokeWidth, rotationPoint, rotation
         )
         if (!visible) {
             return

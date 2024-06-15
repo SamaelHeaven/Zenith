@@ -36,14 +36,14 @@ data class BoundingBox(
             if (rotation == 0f) {
                 return BoundingBox(topLeft, size)
             }
-            val topRight = position + Vector2(halfSize.x, -halfSize.y) + originOffset
-            val bottomLeft = position + Vector2(-halfSize.x, halfSize.y) + originOffset
-            val bottomRight = position + halfSize + originOffset
-            val pivot = position + pivotPoint
-            val rotatedTopLeft = rotatePoint(topLeft, rotation, pivot)
-            val rotatedTopRight = rotatePoint(topRight, rotation, pivot)
-            val rotatedBottomLeft = rotatePoint(bottomLeft, rotation, pivot)
-            val rotatedBottomRight = rotatePoint(bottomRight, rotation, pivot)
+            val topRight = topLeft + Vector2.RIGHT * size
+            val bottomLeft = topLeft + Vector2.DOWN * size
+            val bottomRight = topLeft + size
+            val rotationPoint = position + pivotPoint
+            val rotatedTopLeft = rotatePoint(topLeft, rotation, rotationPoint)
+            val rotatedTopRight = rotatePoint(topRight, rotation, rotationPoint)
+            val rotatedBottomLeft = rotatePoint(bottomLeft, rotation, rotationPoint)
+            val rotatedBottomRight = rotatePoint(bottomRight, rotation, rotationPoint)
             val minX = minOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
             val maxX = maxOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
             val minY = minOf(rotatedTopLeft.y, rotatedTopRight.y, rotatedBottomLeft.y, rotatedBottomRight.y)

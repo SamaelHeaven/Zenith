@@ -26,6 +26,9 @@ data class BoundingBox(
             val halfSize = size * 0.5
             val originOffset = size * (origin * 0.5)
             val topLeft = position - halfSize + originOffset
+            if (rotation == 0f) {
+                return BoundingBox(topLeft, size)
+            }
             val topRight = position + Vector2(halfSize.x, -halfSize.y) + originOffset
             val bottomLeft = position + Vector2(-halfSize.x, halfSize.y) + originOffset
             val bottomRight = position + halfSize + originOffset

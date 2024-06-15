@@ -9,7 +9,6 @@ abstract class Component {
     protected open val originProperty get() = entity!!.originProperty
     protected open val pivotPointProperty get() = entity!!.pivotPointProperty
     protected open val rotationProperty get() = entity!!.rotationProperty
-    protected open val boundingBox get() = entity!!.boundingBox
     val entity: Entity? get() = _entity
 
     protected open var position: Vector2
@@ -40,6 +39,12 @@ abstract class Component {
         get() = entity!!.rotation
         set(value) {
             entity!!.rotation = value
+        }
+
+    protected open var boundingBox
+        get() = entity!!.boundingBox
+        set(value) {
+            entity!!.boundingBox = value
         }
 
     protected open fun start() {}

@@ -2,8 +2,6 @@ package zenith.math
 
 import javafx.beans.NamedArg
 import zenith.core.Entity
-import kotlin.math.cos
-import kotlin.math.sin
 
 data class BoundingBox(
     @NamedArg("x") val x: Float,
@@ -54,8 +52,8 @@ data class BoundingBox(
         return x < otherRight && thisRight > other.x && y < otherBottom && thisBottom > other.y
     }
 
-    fun contains(position: Vector2): Boolean {
-        return position.x >= x && position.x <= x + width && position.y >= y && position.y <= y + height
+    fun contains(point: Vector2): Boolean {
+        return point.x >= x && point.x <= x + width && point.y >= y && point.y <= y + height
     }
 
     override fun equals(other: Any?): Boolean {

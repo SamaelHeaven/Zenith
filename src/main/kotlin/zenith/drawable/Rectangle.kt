@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext
 import zenith.core.CustomProperty
 import zenith.core.Entity
 import zenith.core.Property
+import zenith.math.BoundingBox
 import zenith.math.Vector2
 import zenith.paint.Color
 import zenith.paint.Paint
@@ -34,6 +35,7 @@ class Rectangle(
     val strokeProperty = Property(stroke)
     val strokeWidthProperty = Property(strokeWidth)
     val radiusProperty = Property(radius)
+    public override val boundingBox: BoundingBox get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
 
     public override val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
         setter(value.clamp(-1, 1))

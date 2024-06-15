@@ -6,6 +6,7 @@ import zenith.asset.Texture
 import zenith.core.CustomProperty
 import zenith.core.Entity
 import zenith.core.Property
+import zenith.math.BoundingBox
 import zenith.math.Vector2
 
 class Sprite(
@@ -33,6 +34,7 @@ class Sprite(
     val flippedHorizontallyProperty = Property(flippedHorizontally)
     val flippedVerticallyProperty = Property(flippedVertically)
     val smoothProperty = Property(smooth)
+    public override val boundingBox: BoundingBox get() = BoundingBox.from(position, size, origin, pivotPoint, rotation)
 
     public override val originProperty: Property<Vector2> = CustomProperty(Vector2.ZERO) { _, value, setter ->
         setter(value.clamp(-1, 1))

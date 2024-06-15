@@ -1,6 +1,9 @@
 package zenith.math
 
 import javafx.beans.NamedArg
+import zenith.core.Entity
+import kotlin.math.cos
+import kotlin.math.sin
 
 data class BoundingBox(
     @NamedArg("x") val x: Float,
@@ -8,6 +11,48 @@ data class BoundingBox(
     @NamedArg("width") val width: Float,
     @NamedArg("height") val height: Float
 ) {
+    companion object {
+        fun from(entity: Entity): BoundingBox {
+            return from(entity.position, entity.scale, entity.origin, entity.pivotPoint, entity.rotation)
+        }
+
+        fun from(
+            position: Vector2,
+            size: Vector2,
+            origin: Vector2,
+            pivotPoint: Vector2,
+            rotation: Float
+        ): BoundingBox {
+            val halfSize = size * 0.5
+            val originOffset = size * (origin * 0.5)
+            val topLeft = position - halfSize + originOffset
+            val topRight = position + Vector2(halfSize.x, -halfSize.y) + originOffset
+            val bottomLeft = position + Vector2(-halfSize.x, halfSize.y) + originOffset
+            val bottomRight = position + halfSize + originOffset
+            val pivot = position + pivotPoint
+            val rotatedTopLeft = rotatePoint(topLeft, rotation, pivot)
+            val rotatedTopRight = rotatePoint(topRight, rotation, pivot)
+            val rotatedBottomLeft = rotatePoint(bottomLeft, rotation, pivot)
+            val rotatedBottomRight = rotatePoint(bottomRight, rotation, pivot)
+            val minX = minOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
+            val maxX = maxOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
+            val minY = minOf(rotatedTopLeft.y, rotatedTopRight.y, rotatedBottomLeft.y, rotatedBottomRight.y)
+            val maxY = maxOf(rotatedTopLeft.y, rotatedTopRight.y, rotatedBottomLeft.y, rotatedBottomRight.y)
+            return BoundingBox(minX, minY, maxX - minX, maxY - minY)
+        }
+
+        private fun rotatePoint(point: Vector2, angle: Float, pivot: Vector2): Vector2 {
+            val rad = Math.toRadians(angle.toDouble())
+            val cos = cos(rad)
+            val sin = sin(rad)
+            val translatedX = point.x - pivot.x
+            val translatedY = point.y - pivot.y
+            val rotatedX = translatedX * cos - translatedY * sin
+            val rotatedY = translatedX * sin + translatedY * cos
+            return Vector2(rotatedX + pivot.x, rotatedY + pivot.y)
+        }
+    }
+
     constructor(@NamedArg("position") position: Vector2, @NamedArg("size") size: Vector2) : this(
         position.x, position.y, size.x, size.y
     )

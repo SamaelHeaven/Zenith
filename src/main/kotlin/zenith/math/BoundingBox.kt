@@ -11,6 +11,13 @@ data class BoundingBox(
     @NamedArg("width") val width: Float,
     @NamedArg("height") val height: Float
 ) {
+    val position get() = Vector2(x, y)
+    val size get() = Vector2(width, height)
+
+    constructor(@NamedArg("position") position: Vector2, @NamedArg("size") size: Vector2) : this(
+        position.x, position.y, size.x, size.y
+    )
+
     companion object {
         fun from(entity: Entity): BoundingBox {
             return from(entity.position, entity.scale, entity.origin, entity.pivotPoint, entity.rotation)
@@ -55,10 +62,6 @@ data class BoundingBox(
             return Vector2(rotatedX + pivot.x, rotatedY + pivot.y)
         }
     }
-
-    constructor(@NamedArg("position") position: Vector2, @NamedArg("size") size: Vector2) : this(
-        position.x, position.y, size.x, size.y
-    )
 
     fun intersect(other: BoundingBox): Boolean {
         val thisRight = x + width

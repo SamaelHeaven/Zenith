@@ -72,10 +72,6 @@ class Vector2 {
         return result
     }
 
-    fun isInside(min: Vector2, max: Vector2): Boolean {
-        return x >= min.x && x <= max.x && y >= min.y && y <= max.y
-    }
-
     fun clamp(min: Vector2, max: Vector2): Vector2 {
         return clampX(min.x, max.x).clampY(min.y, max.y)
     }
@@ -110,6 +106,17 @@ class Vector2 {
 
     fun cross(v: Vector2): Float {
         return x * v.y - y * v.x
+    }
+
+    fun rotate(rotation: Float, point: Vector2): Vector2 {
+        val rad = Math.toRadians(rotation.toDouble())
+        val cos = cos(rad)
+        val sin = sin(rad)
+        val translatedX = x - point.x
+        val translatedY = y - point.y
+        val rotatedX = translatedX * cos - translatedY * sin
+        val rotatedY = translatedX * sin + translatedY * cos
+        return Vector2(rotatedX + point.x, rotatedY + point.y)
     }
 
     fun angleBetween(v: Vector2): Float {

@@ -4,8 +4,6 @@ import javafx.scene.transform.Affine
 import zenith.core.Entity
 import zenith.core.Game
 import zenith.math.Vector2
-import kotlin.math.cos
-import kotlin.math.sin
 
 enum class DrawMode {
     SCREEN {
@@ -62,15 +60,7 @@ enum class DrawMode {
                 position, position + Vector2(size.x, 0f), position + size, position + Vector2(0f, size.y)
             )
             val rotatedPoints = if (rotation != 0f) {
-                val radians = Math.toRadians(rotation.toDouble())
-                points.map { point ->
-                    val translatedPoint = point - rotationPoint
-                    val rotatedPoint = Vector2(
-                        translatedPoint.x * cos(radians) - translatedPoint.y * sin(radians),
-                        translatedPoint.x * sin(radians) + translatedPoint.y * cos(radians)
-                    )
-                    rotatedPoint + rotationPoint
-                }
+                points.map { point -> point.rotate(rotation, rotationPoint) }
             } else {
                 points
             }

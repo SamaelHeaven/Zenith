@@ -6,6 +6,7 @@ import javafx.scene.image.Image
 import zenith.core.Game
 import zenith.io.Path
 import zenith.io.Resource
+import zenith.math.BoundingBox
 import zenith.math.Vector2
 import java.io.File
 import java.io.OutputStream
@@ -18,6 +19,7 @@ class Texture {
     val width get() = fxImage.width.toFloat()
     val height get() = fxImage.height.toFloat()
     val size get() = Vector2(width, height)
+    val boundingBox get() = BoundingBox(0f, 0f, width, height)
 
     companion object {
         private val cachedFxImages = mutableMapOf<String, Image>()

@@ -34,26 +34,15 @@ data class BoundingBox(
             val bottomLeft = topLeft + Vector2.DOWN * size
             val bottomRight = topLeft + size
             val rotationPoint = (topLeft + size * 0.5) + pivotPoint
-            val rotatedTopLeft = rotatePoint(topLeft, rotation, rotationPoint)
-            val rotatedTopRight = rotatePoint(topRight, rotation, rotationPoint)
-            val rotatedBottomLeft = rotatePoint(bottomLeft, rotation, rotationPoint)
-            val rotatedBottomRight = rotatePoint(bottomRight, rotation, rotationPoint)
+            val rotatedTopLeft = topLeft.rotate(rotation, rotationPoint)
+            val rotatedTopRight = topRight.rotate(rotation, rotationPoint)
+            val rotatedBottomLeft = bottomLeft.rotate(rotation, rotationPoint)
+            val rotatedBottomRight = bottomRight.rotate(rotation, rotationPoint)
             val minX = minOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
             val maxX = maxOf(rotatedTopLeft.x, rotatedTopRight.x, rotatedBottomLeft.x, rotatedBottomRight.x)
             val minY = minOf(rotatedTopLeft.y, rotatedTopRight.y, rotatedBottomLeft.y, rotatedBottomRight.y)
             val maxY = maxOf(rotatedTopLeft.y, rotatedTopRight.y, rotatedBottomLeft.y, rotatedBottomRight.y)
             return BoundingBox(minX, minY, maxX - minX, maxY - minY)
-        }
-
-        private fun rotatePoint(point: Vector2, angle: Float, pivot: Vector2): Vector2 {
-            val rad = Math.toRadians(angle.toDouble())
-            val cos = cos(rad)
-            val sin = sin(rad)
-            val translatedX = point.x - pivot.x
-            val translatedY = point.y - pivot.y
-            val rotatedX = translatedX * cos - translatedY * sin
-            val rotatedY = translatedX * sin + translatedY * cos
-            return Vector2(rotatedX + pivot.x, rotatedY + pivot.y)
         }
     }
 

@@ -22,7 +22,7 @@ class Gamepad private constructor(val id: Int) {
     val axes: Map<GamepadAxis, Float> get() = Collections.unmodifiableMap(_axes)
 
     val name: String get() {
-        if (Platform.get() == Platform.WEB) {
+        if (Platform.current == Platform.WEB) {
             return UNKNOWN
         }
         return  GLFW.glfwGetGamepadName(id) ?: UNKNOWN
@@ -35,7 +35,7 @@ class Gamepad private constructor(val id: Int) {
         init {
             Game.throwIfUninitialized()
             initializeGamepads()
-            if (Platform.get() == Platform.DESKTOP) {
+            if (Platform.current == Platform.DESKTOP) {
                 initializeGLFW()
             }
         }
@@ -49,7 +49,7 @@ class Gamepad private constructor(val id: Int) {
         }
 
         internal fun update() {
-            if (Platform.get() == Platform.WEB) {
+            if (Platform.current == Platform.WEB) {
                 return
             }
             for (gamepad in gamepads) {

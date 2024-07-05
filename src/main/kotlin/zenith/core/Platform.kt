@@ -5,11 +5,10 @@ enum class Platform {
     WEB;
 
     companion object {
-        fun get(): Platform {
-            if (System.getProperty("zenith.webBuild") == "true") {
-                return WEB
-            }
-            return DESKTOP
+        val current = if (System.getProperty("zenith.webBuild") == "true") {
+            WEB
+        } else {
+            DESKTOP
         }
     }
 }

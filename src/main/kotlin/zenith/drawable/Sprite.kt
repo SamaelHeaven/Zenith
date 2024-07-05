@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext
 import zenith.asset.Texture
 import zenith.core.CustomProperty
 import zenith.core.Entity
+import zenith.core.Platform
 import zenith.core.Property
 import zenith.math.BoundingBox
 import zenith.math.Vector2
@@ -173,7 +174,9 @@ class Sprite(
             actualPosition += Vector2.DOWN * size
             actualSize = Vector2(actualSize.x, -actualSize.y)
         }
-        gc.isImageSmoothing = smooth
+        if (Platform.current == Platform.DESKTOP) {
+            gc.isImageSmoothing = smooth
+        }
         gc.drawImage(
             texture?.fxImage,
             actualPosition.x.toDouble(),

@@ -34,7 +34,7 @@ class Audio(
 
     val volumeProperty: Property<Float> = CustomProperty(volume) { property, value, setter ->
         val newValue = clampVolume(value)
-        if (Platform.get() == Platform.WEB) {
+        if (Platform.current == Platform.WEB) {
             setter(newValue)
             return@CustomProperty
         }
@@ -66,7 +66,7 @@ class Audio(
 
         val volumeProperty: Property<Float> = CustomProperty(1f) { property, value, setter ->
             val newValue = clampVolume(value)
-            if (Platform.get() == Platform.WEB) {
+            if (Platform.current == Platform.WEB) {
                 setter(newValue)
                 return@CustomProperty
             }
@@ -86,7 +86,7 @@ class Audio(
             }
 
         init {
-            if (Platform.get() == Platform.DESKTOP) {
+            if (Platform.current == Platform.DESKTOP) {
                 initializeOpenAL()
             }
         }
@@ -136,7 +136,7 @@ class Audio(
     ) : this(Resource.stream(resource), volume, loop)
 
     fun play() {
-        if (Platform.get() == Platform.WEB) {
+        if (Platform.current == Platform.WEB) {
             return
         }
         cleanClips()
@@ -154,7 +154,7 @@ class Audio(
     }
 
     fun pause() {
-        if (Platform.get() == Platform.WEB) {
+        if (Platform.current == Platform.WEB) {
             return
         }
         cleanClips()
@@ -166,7 +166,7 @@ class Audio(
     }
 
     fun stop() {
-        if (Platform.get() == Platform.WEB) {
+        if (Platform.current == Platform.WEB) {
             return
         }
         cleanClips()
@@ -180,7 +180,7 @@ class Audio(
 
     val state: AudioState
         get() {
-            if (Platform.get() == Platform.WEB) {
+            if (Platform.current == Platform.WEB) {
                 return AudioState.UNSUPPORTED
             }
             cleanClips()

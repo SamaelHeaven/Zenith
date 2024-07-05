@@ -114,10 +114,15 @@ object Game {
         _fpsTarget = config.fpsTarget
         _scene = scene
         System.setErr(PrintStream(PrintStream.nullOutputStream()))
-        Platform.startup {
+        val init = {
             initialize(stage)
             run()
         }
+        stage?.let {
+            init()
+            return
+        }
+        Platform.runLater(init)
     }
 
     fun exit() {

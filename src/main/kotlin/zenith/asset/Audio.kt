@@ -10,6 +10,7 @@ import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.system.libc.LibCStdlib
 import zenith.core.CustomProperty
+import zenith.core.Platform
 import zenith.core.Property
 import zenith.io.ByteBufferUtils
 import zenith.io.Resource
@@ -32,8 +33,12 @@ class Audio(
     private val disposedClips = mutableListOf<Clip>()
 
     val volumeProperty: Property<Float> = CustomProperty(volume) { property, value, setter ->
-        cleanClips()
         val newValue = clampVolume(value)
+        if (Platform.get() == Platform.WEB) {
+            setter(newValue)
+            return@CustomProperty
+        }
+        cleanClips()
         if (newValue == property.value) {
             return@CustomProperty
         }
@@ -61,6 +66,10 @@ class Audio(
 
         val volumeProperty: Property<Float> = CustomProperty(1f) { property, value, setter ->
             val newValue = clampVolume(value)
+            if (Platform.get() == Platform.WEB) {
+                setter(newValue)
+                return@CustomProperty
+            }
             if (newValue == property.value) {
                 return@CustomProperty
             }
@@ -77,7 +86,9 @@ class Audio(
             }
 
         init {
-            initializeOpenAL()
+            if (Platform.get() == Platform.DESKTOP) {
+                initializeOpenAL()
+            }
         }
 
         private fun initializeOpenAL() {
@@ -125,6 +136,9 @@ class Audio(
     ) : this(Resource.stream(resource), volume, loop)
 
     fun play() {
+        if (Platform.get() == Platform.WEB) {
+            return
+        }
         cleanClips()
         if (state == AudioState.PAUSED) {
             for (clip in clips) {
@@ -140,6 +154,9 @@ class Audio(
     }
 
     fun pause() {
+        if (Platform.get() == Platform.WEB) {
+            return
+        }
         cleanClips()
         for (clip in clips) {
             if (clip.state == AudioState.PLAYING) {
@@ -149,6 +166,9 @@ class Audio(
     }
 
     fun stop() {
+        if (Platform.get() == Platform.WEB) {
+            return
+        }
         cleanClips()
         for (clip in clips) {
             if (clip.state == AudioState.PLAYING) {
@@ -160,6 +180,9 @@ class Audio(
 
     val state: AudioState
         get() {
+            if (Platform.get() == Platform.WEB) {
+                return AudioState.UNSUPPORTED
+            }
             cleanClips()
             for (clip in clips) {
                 if (clip.state == AudioState.PAUSED) {

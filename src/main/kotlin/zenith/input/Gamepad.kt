@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWGamepadState
 import org.lwjgl.system.Configuration
 import zenith.core.Game
+import zenith.core.Platform
 import java.util.*
 
 class Gamepad private constructor(val id: Int) {
@@ -13,7 +14,6 @@ class Gamepad private constructor(val id: Int) {
     private val _pressedButtons = mutableSetOf<GamepadButton>()
     private val _axes = mutableMapOf<GamepadAxis, Float>()
     private val previousDownButtons = mutableSetOf<GamepadButton>()
-    val name get() = GLFW.glfwGetGamepadName(id) ?: "Unknown gamepad"
     val connected get() = GLFW.glfwJoystickPresent(id) && GLFW.glfwJoystickIsGamepad(id)
     val downButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_downButtons)
     val upButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_upButtons)
@@ -21,13 +21,23 @@ class Gamepad private constructor(val id: Int) {
     val pressedButtons: Set<GamepadButton> get() = Collections.unmodifiableSet(_pressedButtons)
     val axes: Map<GamepadAxis, Float> get() = Collections.unmodifiableMap(_axes)
 
+    val name: String get() {
+        if (Platform.get() == Platform.WEB) {
+            return UNKNOWN
+        }
+        return  GLFW.glfwGetGamepadName(id) ?: UNKNOWN
+    }
+
     companion object : Iterable<Gamepad> {
         private val gamepads = mutableListOf<Gamepad>()
+        const val UNKNOWN = "Unknown gamepad"
 
         init {
             Game.throwIfUninitialized()
-            initializeGLFW()
-            initializeGamepads()
+            if (Platform.get() == Platform.DESKTOP) {
+                initializeGLFW()
+                initializeGamepads()
+            }
         }
 
         operator fun get(index: Int): Gamepad {
@@ -39,6 +49,9 @@ class Gamepad private constructor(val id: Int) {
         }
 
         internal fun update() {
+            if (Platform.get() == Platform.WEB) {
+                return
+            }
             for (gamepad in gamepads) {
                 gamepad.update()
             }

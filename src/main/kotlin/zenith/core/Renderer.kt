@@ -1,11 +1,13 @@
 package zenith.core
 
 import javafx.scene.CacheHint
+import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
 import zenith.drawable.Drawable
 import zenith.paint.Paint
 
 object Renderer {
+    internal val offscreenCanvas = Canvas()
     private val gc: GraphicsContext
 
     init {

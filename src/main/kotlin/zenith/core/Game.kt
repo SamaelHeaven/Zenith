@@ -105,7 +105,7 @@ object Game {
             _fpsTarget = value
         }
 
-    fun launch(scene: Scene, config: GameConfig = GameConfig()) {
+    fun launch(scene: Scene, config: GameConfig = GameConfig(), stage: Stage? = null) {
         if (initialized) {
             throw IllegalStateException("Game has already been initialized.")
         }
@@ -115,7 +115,7 @@ object Game {
         _scene = scene
         System.setErr(PrintStream(PrintStream.nullOutputStream()))
         Platform.startup {
-            initialize()
+            initialize(stage)
             run()
         }
     }
@@ -142,12 +142,12 @@ object Game {
 
     internal val fxCanvas: Canvas get() = _fxCanvas
 
-    private fun initialize() {
+    private fun initialize(stage: Stage?) {
         try {
             initializeRoot()
             initializeCanvas()
             initializeScene()
-            initializeStage()
+            initializeStage(stage)
         } catch (e: Exception) {
             e.printStackTrace(err)
         } finally {
@@ -178,8 +178,8 @@ object Game {
         fxScene.heightProperty().addListener { _, _, _ -> resizedListener() }
     }
 
-    private fun initializeStage() {
-        _fxStage = Stage()
+    private fun initializeStage(stage: Stage? = null) {
+        _fxStage = stage ?: Stage()
         _fxStage.initStyle(if (config.decorated) StageStyle.DECORATED else StageStyle.UNDECORATED)
         _fxStage.title = config.title
         _fxStage.fullScreenExitHint = ""

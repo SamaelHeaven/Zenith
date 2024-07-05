@@ -122,7 +122,7 @@ object Game {
             init()
             return
         }
-        Platform.runLater(init)
+        Platform.startup(init)
     }
 
     fun exit() {

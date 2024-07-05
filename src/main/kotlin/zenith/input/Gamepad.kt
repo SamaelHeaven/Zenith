@@ -34,9 +34,9 @@ class Gamepad private constructor(val id: Int) {
 
         init {
             Game.throwIfUninitialized()
+            initializeGamepads()
             if (Platform.get() == Platform.DESKTOP) {
                 initializeGLFW()
-                initializeGamepads()
             }
         }
 
